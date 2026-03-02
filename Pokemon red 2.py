@@ -30,7 +30,7 @@ wild_pokemon = [
 ]
 my_pokemon = [
     {"Name":"venosaur","Type":"grass","Level":3,"Health":55,"Attack":["vine whip",random.randrange(4,7), "toxic", random.randrange(7,9)]},
-    {"Name":"Lucario","Type":"normal","Level":4,"Health":32,"Attack":["Aqua Sphere",random.randrange(3,5), "High Jump Kick", random.randrange(6,10)]}
+    {"Name":"Lucario","Type":"normal","Level":4,"Health":32,"Attack":["Aqua Sphere",3, "High Jump Kick", 5]}
 ]
 
 player_choose_move = True
@@ -71,12 +71,44 @@ def battle():
 
 
     while True:
-        wild_pokemon_attack = random.randint(0,len(wild_pokemon[wild_pokemon_number-1],2) #fix this
-        print("enemy pokemon:",wild_pokemon[wild_pokemon_number]["Name"],"is using",wild_pokemon[wild_pokemon_number]["Attack"][wild_pokemon_attack])
+        wild_pokemon_random_number = random.randrange(0,3,2)
+        wild_pokemon_attack_name = pokemon["Attack"][wild_pokemon_random_number]
+        wild_pokemon_attack_damage = pokemon["Attack"][wild_pokemon_random_number+1]
+
+        print("enemy pokemon:",pokemon["Name"],"is using",pokemon["Attack"][wild_pokemon_random_number])
+
+
+        player_pokemon_hp = player_pokemon_hp - wild_pokemon_attack_damage
+        print("you took",wild_pokemon_attack_damage,"damage, you now have:",player_pokemon_hp,"health left")
         break
 
     while player_choose_move == True:
-        print(my_pokemon[0],"has moves:",player_pokemon["Attack"])
+        print(my_pokemon)
+        pokemon_number = int(input("which pokemon do you want to use? type from 1-whichever you want"))
+
+
+
+        used_pokemon = my_pokemon[pokemon_number]
+        print("you are using",used_pokemon["Name"])
+
+
+        for i in range(0,len(used_pokemon["Attack"]),2):
+            print(used_pokemon["Attack"][i])
+            used_attack_number = int(input("which attack do you want to use? type from 1-whichever you want"))
+            used_attack = used_pokemon
+
+
+
+
+
+
+        used_attack_number = int(input("which attack do you want to use? type from 1-whichever you want"))
+        used_attack = used_pokemon["Attack"][used_attack_number]
+        used_attack = ((used_attack*2)-1)
+        print(used_pokemon[used_attack])
+
+
+
         player_move = input("choose by typing move names")
         if player_move in player_pokemon["Attack"]:
             pokemon["Health"] = pokemon["Health"] - 7
