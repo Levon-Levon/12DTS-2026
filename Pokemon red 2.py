@@ -36,7 +36,7 @@ my_pokemon = [
 player_choose_move = True
 pokebucks = 0
 
-global _pokebucks
+
 
 
 
@@ -51,6 +51,8 @@ def overworld_timer():
     print("battle start")
     battle()
 def battle():
+    global pokebucks
+
     wild_pokemon_number = random.randint(0,len(wild_pokemon)-1)
     pokemon = wild_pokemon[wild_pokemon_number]
     player_pokemon = my_pokemon[0]
