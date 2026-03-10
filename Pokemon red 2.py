@@ -1,0 +1,208 @@
+
+
+
+
+
+
+# adding random librarys
+
+import random
+import time
+
+
+
+
+
+
+#variaibles                                                                                                                                                                                                                                                                                                                                                                                  what the epstein?
+matrix = [{"thing":"other"},{"thing2","other2"}]
+
+wild_pokemon = [
+    {"Name":"Charizard","Type":"Fire","Level":random.randint(1,5),"Health":random.randint(50,100),"Attack":["Blaze",random.randrange(4,7), "Solar Beam", random.randrange(7,9)]}, #pokemon has name, type, health, and level in dictionary
+    {"Name":"Vaporeon","Type":"Water","Level":random.randint(1,7),"Health":random.randint(10,30),"Attack":["brine",random.randrange(8,11), "rock smash", random.randrange(4,6)]},
+    {"Name":"diglet","Type":"Earth","Level":random.randint(1,2),"Health":random.randint(7,24),"Attack":["spelunk",random.randrange(2,4), "mud slap", random.randrange(3,16)]},
+    {"Name":"Raichu","Type":"Electric","Level":random.randint(1,3),"Health":random.randint(12,28),"Attack":["thunder shock",random.randrange(4,10), "pay day", random.randrange(3,5)]},
+    {"Name":"Mr Mime","Type":"psychic","Level":random.randint(1,9),"Health":random.randint(15,40),"Attack":["happy mime",random.randrange(6,12), "double slap", random.randrange(2,18)]},
+    {"Name":"Jigglypuff","Type":"Fiary","Level":random.randint(1,4),"Health":random.randint(35,68),"Attack":["sing",random.randrange(2,6), "double slap", random.randrange(10,12)]},
+    {"Name":"Lopunny","Type":"Normal","Level":random.randint(1,10),"Health":random.randint(4,17),"Attack":["round",random.randrange(6,8), "hidden power", random.randrange(9,10)]},
+
+
+]
+my_pokemon = [
+    {"Name":"venosaur","Type":"grass","Level":3,"Health":55,"Attack":["vine whip",random.randrange(4,7), "toxic", random.randrange(7,9)]},
+    {"Name":"Lucario","Type":"normal","Level":4,"Health":32,"Attack":["Aqua Sphere",random.randrange(10,12), "High Jump Kick", random.randrange(6,17)]}
+]
+
+player_choose_move = True
+pokebucks = 0
+
+
+
+
+
+
+#functions
+
+
+def overworld_timer():
+    timer = random.randint(0,0)
+    print(timer)
+    time.sleep(timer)
+    print("battle start")
+    battle()
+def battle():
+    global pokebucks
+
+    wild_pokemon_number = random.randint(0,len(wild_pokemon)-1)
+    pokemon = wild_pokemon[wild_pokemon_number]
+    player_pokemon = my_pokemon[0]
+    player_pokemon_hp = player_pokemon["Health"]
+
+
+    #show player locaton
+
+    print("player pokemon:",player_pokemon["Name"])
+    print("Player pokemon hp:",player_pokemon_hp)
+
+    #show enemy pokemon
+
+    print("you encountered a wild",pokemon["Name"])
+    print("its a",pokemon["Type"], "type pokemon")
+    print("its level is",pokemon["Level"])
+    print("it has",pokemon["Health"],"health")
+
+
+
+
+    for i in range(0,len(my_pokemon)):
+        print("pokemon number:",i,"is",my_pokemon[i]["Name"])
+
+
+    pokemon_number = int(input("which pokemon do you want to use? type from 1-whichever you want"))
+
+    used_pokemon = my_pokemon[pokemon_number]
+    print("you are using", used_pokemon["Name"])
+
+
+
+    while True: #this doesnt need to be a loop
+        wild_pokemon_random_number = random.randrange(0,3,2)
+        wild_pokemon_attack_name = pokemon["Attack"][wild_pokemon_random_number]
+        wild_pokemon_attack_damage = pokemon["Attack"][wild_pokemon_random_number+1]
+
+        print("enemy pokemon:",pokemon["Name"],"is using",pokemon["Attack"][wild_pokemon_random_number])
+
+
+        player_pokemon_hp = player_pokemon_hp - wild_pokemon_attack_damage
+        print("you took",wild_pokemon_attack_damage,"damage, you now have:",player_pokemon_hp,"health left")
+
+
+        while player_choose_move == True:
+
+
+
+            for i in range(0,len(used_pokemon["Attack"]),2):
+                if i ==0:
+                    print("move 1 is:",used_pokemon["Attack"][i])
+
+                elif i == 2:
+                    print("move 2 is:",used_pokemon["Attack"][i])
+
+
+
+            used_attack_number = int(input("which attack do you want to use? type from 1-whichever you want"))
+            used_attack_name = used_pokemon["Attack"][used_attack_number+1]
+            used_attack_damage = used_pokemon["Attack"][used_attack_number]
+            print("you used:",used_attack_name,pokemon["Name"],"took",used_attack_damage,"damage")
+
+            pokemon["Health"] = pokemon["Health"] - used_attack_damage
+            print("it now has",pokemon["Health"],"health")
+            break
+
+
+        if used_pokemon["Health"] <= 0 :
+            print("your pokemon died you lose the battle")
+            break
+
+        elif pokemon["Health"] <=0:
+            print("you killed the pokemon")
+            pokebucks_gain = random.randint(6,7)
+            pokebucks += pokebucks_gain
+            print("you earned",pokebucks_gain,"pokebucks")
+            break
+
+
+
+
+
+
+#start codezxzxzxzxzzxzxzxzxzxz
+overworld_timer()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
