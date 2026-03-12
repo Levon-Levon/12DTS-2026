@@ -14,7 +14,10 @@ import random
 
 
 #-----------------------------variables-------------------------
-encounters = ["redditor","rock bottom shivam"]
+
+
+encounter_messages = ["you encounter a redditor"]
+encounters = [["redditor","trash bin"]]
 class_type = []
 inventory = []
 honour = 0
@@ -41,8 +44,8 @@ classes = [
 
 #--------------------------functions-----------------------------
 
-def skill_check_encounter(message,encounter_decider):
-    print(message)
+def skill_check_encounter(encounter_decider):
+    print(encounter_messages[encounter_decider])
 
     if encounter_decider == "redditor":
         print("choose a stat to counter")
@@ -127,9 +130,8 @@ while True:
         except ValueError: #if player didn't type an integer
             print("invalid input")
 
-    message = "you encounter a redditor flexing his karma"
     encounter_decider = random.randint(0,len(encounters))
-    skill_check_encounter(message,encounter_decider)
+    skill_check_encounter(encounter_decider)
 
 
 
