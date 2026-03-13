@@ -3,6 +3,7 @@
 
 
 
+
 #--------------------------library imports------------------
 import time
 import random
@@ -14,6 +15,12 @@ import random
 
 
 #-----------------------------variables-------------------------
+
+
+encounter_messages = ["you encounter a redditor","fard"]
+encounters = ["redditor","trash bin"]
+
+
 
 class_type = []
 inventory = []
@@ -31,16 +38,24 @@ weapons = [
 ]
 
 classes = [
-    {"name":"bronie","strength":8,"charisma":3,"intelligence":9,"vigor":7,"smell":12,"luck":11,"street cred":2},
-    {"name":"csgo try-hard","strength":6,"charisma":6,"intelligence":8,"vigor":8,"smell":11,"luck":6,"street cred":10},
-    {"name":"prime shivam","strength":12,"charisma":10,"intelligence":6,"vigor":13,"smell":5,"luck":4,"street cred":6},
-    {"name":"mr. E","strength":3,"charisma":12,"intelligence":11,"vigor":5,"smell":4,"luck":10,"street cred":12},
+    {"name":"bronie","strength":8,"charisma":3,"intelligence":9,"vigor":7,"smell":12,"luck":11,"street cred":2,"cash":12},
+    {"name":"csgo try-hard","strength":6,"charisma":6,"intelligence":8,"vigor":8,"smell":11,"luck":6,"street cred":10,"cash":2},
+    {"name":"prime shivam","strength":12,"charisma":10,"intelligence":6,"vigor":13,"smell":5,"luck":4,"street cred":6,"cash":5},
+    {"name":"mr. E","strength":3,"charisma":12,"intelligence":11,"vigor":5,"smell":4,"luck":10,"street cred":12,"cash":24},
 
 
 ]
 
 #--------------------------functions-----------------------------
 
+def skill_check_encounter(encounter_decider):
+    print(encounter_messages[encounter_decider]) #saves typing multiple prints for each encounter by recieveing message from list
+
+    if encounter_decider == 0:
+        print("choose a stat to counter")
+        print(class_area)
+        for i in range(0,len(classes[class_area])):
+            print(classes[class_area][i]," = 1")
 
 
 def honour():
@@ -70,7 +85,8 @@ def character_choose():
             break
         else:
             print("invalid input try again")
-def main_menu():
+            break
+
 
 
 
@@ -78,7 +94,7 @@ def main_menu():
 #----------------------------code------------------------
 
 while True:
-    while main_menu == True:
+    while True:
         try:
             player_option = int(input("type 1 to start game, type 2 to exit, type 3 for how to play"))
             if player_option == 1:
@@ -95,17 +111,21 @@ while True:
             print("not a valid input")
 
 
-    print("")
+    print("Some guy that insulted your reddit account turned out to be the ceo of your favourite fast-food chain glorbguck inc. ")
+    print("your goal is to break into his large epic skyscraper and humiliate him in the most gratifying way you can imagine.")
+    print("but first, you must pick your angry redditor")
 
 
 
 
     for i in range (0,len(classes)):
-        print(classes[i])
+        print(classes[i]["name"],"=",i+1)
 
 
 
     while player_choosing == True: #player selects class they play
+        for i in range(0, len(classes)):
+            print(classes[i]["name"], "=", i+1)
         try:
            class_type = int(input("type the adjacent number of the class you want to play from 1-4"))
            if 4 >= class_type >=1: #checks if within boundry limits of 4 characters
@@ -116,9 +136,7 @@ while True:
         except ValueError: #if player didn't type an integer
             print("invalid input")
 
+    encounter_decider = random.randint(0,len(encounters)-2)
+    print(len(encounters))
 
-
-
-
-
-
+    skill_check_encounter(encounter_decider)
