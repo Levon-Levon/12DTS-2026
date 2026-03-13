@@ -17,7 +17,8 @@ import random
 #-----------------------------variables-------------------------
 
 
-encounter_messages = ["you encounter a redditor","fard"]
+encounter_messages = ["you encounter a redditor, type 1 to punch his groin, type 2 to flex reddit karma, type 3 to flex reddit gold",
+                      "fard"]
 encounters = ["redditor","trash bin"]
 
 
@@ -38,10 +39,10 @@ weapons = [
 ]
 
 classes = [
-    {"name":"bronie","strength":8,"charisma":3,"intelligence":9,"vigor":7,"smell":12,"luck":11,"street cred":2,"cash":12},
-    {"name":"csgo try-hard","strength":6,"charisma":6,"intelligence":8,"vigor":8,"smell":11,"luck":6,"street cred":10,"cash":2},
-    {"name":"prime shivam","strength":12,"charisma":10,"intelligence":6,"vigor":13,"smell":5,"luck":4,"street cred":6,"cash":5},
-    {"name":"mr. E","strength":3,"charisma":12,"intelligence":11,"vigor":5,"smell":4,"luck":10,"street cred":12,"cash":24},
+    {"name":"bronie","stats":["strength",8,"charisma",3,"intelligence",9,"vigor",7,"smell",12,"luck",11,"street cred",2,"cash",12]},
+    {"name":"csgo try-hard","stats":["strength",6,"charisma",6,"intelligence",8,"vigor",8,"smell",11,"luck",6,"street cred",10,"cash",2]},
+    {"name":"prime shivam","stats":["strength",12,"charisma",10,"intelligence",6,"vigor",13,"smell",5,"luck",4,"street cred",6,"cash",5]},
+    {"name":"mr. E","stats":["strength",3,"charisma",12,"intelligence",11,"vigor",5,"smell",4,"luck",10,"street cred",12,"cash",24]},
 
 
 ]
@@ -52,10 +53,26 @@ def skill_check_encounter(encounter_decider):
     print(encounter_messages[encounter_decider]) #saves typing multiple prints for each encounter by recieveing message from list
 
     if encounter_decider == 0:
-        print("choose a stat to counter")
-        print(class_area)
-        for i in range(0,len(classes[class_area])):
-            print(classes[class_area][i]," = 1")
+        while True:
+
+            for i in range(0,len(classes[class_area]["stats"]),2):
+                print(classes[class_area]["stats"][i]," = ",classes[class_area]["stats"][i+1]) #entire chunk is to check
+            try:
+                scenario_chosen = int(input("choose which scenario to counter"))
+                if scenario_chosen == 1:
+                    amount_stat_needed = random.randint(0,20)
+                    if classes[class_area]["stats"][1] > amount_stat_needed:
+                        print("you successfully punch the redditors")
+                    else:
+                        print("you failed")
+
+
+
+            except ValueError:
+                print("not a number try again")
+
+
+
 
 
 def honour():
