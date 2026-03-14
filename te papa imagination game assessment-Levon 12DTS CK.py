@@ -20,7 +20,7 @@ import random
 
 
 class_type = []
-inventory = []
+inventory = ["soda","katana"]
 honour = 0
 vending_machine_health = 20
 resulting_honour = ""
@@ -30,11 +30,9 @@ vending_machine = True
 phase_one = True
 phase_two = False
 phase_three = False
-success = "adsfasd"
+success = ""
 
 
-
-equipment = {"headgear":"","body":"","leggings":"","feet":""}
 
 classes = [
     {"name":"bronie","stats":["strength",8,"charisma",3,"intelligence",9,"vigor",7,"smell",12,"luck",11,"street cred",2,"cash",12]},
@@ -46,6 +44,7 @@ classes = [
 ]
 
 encounter_messages = ["do you want to quit the game? type 1 if you do, type 2 to keep playing.",
+                      "you open your inventory",
                       "you encounter a redditor, type 1 to punch his groin, type 2 to flex reddit karma, type 3 to flex reddit gold",
                       "you are at a vending machine, type 1 to kick machine, type 2 to purchase soda pop for $5",
 
@@ -57,6 +56,7 @@ encounter_messages = ["do you want to quit the game? type 1 if you do, type 2 to
 encounters = ["redditor","vending machine","asdfasdf"]
 
 #--------------------------functions-----------------------------
+
 
 def skill_check_encounter(encounter_decider):
     global inventory
@@ -81,16 +81,20 @@ def skill_check_encounter(encounter_decider):
                     print("not a number from 1-2")
            except ValueError:
                print("not a valid input")
+    elif encounter_decider == 1:
+        print("your inventory")
 
 
-    if encounter_decider == 1: #corresponding from list
+    elif encounter_decider == 2: #corresponding from list
         while True:
             try:
                 scenario_chosen = int(input("choose which scenario to counter"))
 
                 if scenario_chosen == 1:
-                    amount_stat_needed = 99
+                    print("you try to punch the redditor")
+                    amount_stat_needed -=2
                     print("required strength is: ", amount_stat_needed)
+                    time.sleep(2)
                     if classes[class_area]["stats"][1] >= amount_stat_needed:
                         print("you successfully punch the redditor, you gain +1 strength")
                         classes[class_area]["stats"][1] += 1
@@ -129,7 +133,7 @@ def skill_check_encounter(encounter_decider):
 
 
 
-    elif encounter_decider == 2: #vending machine scenario
+    elif encounter_decider == 3: #vending machine scenario
         if vending_machine == True: #if vending machine hasn't been broken by previous actions
             while True:
                 try:
@@ -180,46 +184,33 @@ def skill_check_encounter(encounter_decider):
         else:
             print("the vending machine was broken")
 
-
-
-
-
-
-
-def honour():
-    global honour
-    if honour < 0:
-        resulting_honour = honour_types[2]
-
-    elif 50> honour >= 0:
-        resulting_honour = honour_types[1]
-    elif honour >= 50:
-        resulting_honour = honour_types[0]
-    return resulting_honour
-
-def character_choose():
-    global class_type
-    global player_choosing
-    global class_area
-    print(classes[class_area]["name"])
-    end_loop = input("is that your selected class type? y or n")
+def inventory_combine(inventory): #used for combining two items into a stat boost or other item
     while True:
-        if "y" in end_loop:
-            class_type = classes[class_area]
-            player_choosing = False
-            return class_type
-        elif "n" in end_loop:
-            print("choose again")
-            break
+
+        print("your inventory contains: ", inventory) #shows player all items
+        first_item = input("what is the first item you want to combine?")
+        if first_item in inventory: #if valid input checks for second item
+            second_item = input("what is the second item you want to combine?")
+
+            if second_item in inventory: #if valid input looks for combination recipes
+
+
+
+                if first_item or second_item == "soda" and first_item or second_item == "katana":
+                    print("you got liquid all over yourself... you gain 2 smell but lose a soda")
+                    inventory.remove("soda")
+                    classes[class_area]["stats"][9] += 2
+
+
+
+
+            else:
+                print("you don't have that second item combination failed")
         else:
-            print("invalid input try again")
-            break
-
-
-
-
-
+            print("you dont have that")
 #----------------------------code------------------------
+
+
 
 while True:
     while True:
@@ -234,7 +225,7 @@ while True:
             elif player_option == 3:
                 print("this is an adventure dnd inspired puzzle game which has you using your brain (and rng) to get past all the obstacles")
                 time.sleep(2)
-                print("type the first letter as indicated in [] to move to/do a scenario")
+                print("type the first letter as indicated in [] to move to/do a scenario or type i to access inventory")
                 time.sleep(2)
                 print("you lose the game if any stat (including cash) is reduced to zero or lower")
             else:
@@ -242,23 +233,29 @@ while True:
         except ValueError:
             print("not a valid input")
 
-
     print("Some guy that insulted your reddit account turned out to be the ceo of your favourite fast-food chain glorbguck inc. ")
     print("your goal is to break into his large epic skyscraper and humiliate him in the most gratifying way you can imagine.")
     print("but first, you must pick your angry redditor")
 
-
-
-
     while player_choosing == True: #player selects class they play
         for i in range(0, len(classes)):
             print(classes[i]["name"], "=", i+1 )#accesses names from dictionary and prints from the range of 0-3
-
         try:
            class_type = int(input("type the adjacent number of the class you want to play from 1-4"))
            if 4 >= class_type >=1: #checks if within boundry limits of 4 characters
                class_area = class_type - 1 #starts from 0 for computer checking within the dictionary in the function
-               character_choose()
+               print(classes[class_area]["name"])
+               end_loop = input("is that your selected class type? y or n")
+               while True:
+                   if end_loop == "y":
+                       class_type = classes[class_area]
+                       player_choosing = False
+                       break
+                   elif end_loop == "n":
+                       print("choose again")
+                       break
+                   else:
+                       print("invalid input try again")
            else: #standard error and retrys loop
                print("type a number from 1-4")
         except ValueError: #if player didn't type an integer
@@ -268,10 +265,13 @@ while True:
     while True:
         while phase_one == True: #start here but player could go to many different points of the game, all phases start out false and certain ones will be unlocked based on specific scenario
             chosen_area = input("you stand at the front gates of the large corporate building, you notice a [v]ending machine,the [f]ront gates, and a [m]ouldy piece of cheese on the ground. ")
-            if chosen_area == "v":
-                encounter_decider = 2
-                skill_check_encounter(encounter_decider)
+            if chosen_area == "i":
+                inventory_combine(inventory)
 
+
+            elif chosen_area == "v":
+                encounter_decider = 3
+                skill_check_encounter(encounter_decider)
             elif chosen_area == "f":
                 print()
 
@@ -279,29 +279,67 @@ while True:
                 print("you pick up the mouldy cheese and place it in your inventory, you seem to be a little stinkier then before...")
                 classes[class_area]["stats"][9] += 1
                 chosen_area = input("as you stuff the cheese in you pocket you notice an entrance by the right side door, but a fat guard is blocking your path, [s]neak, [c]onfront")
-                if chosen_area == "s":
-                    print()
+
+                if chosen_area == "i":
+                    inventory_combine(inventory)
+
+                elif chosen_area == "s": #this isn't a multi-scenario stat chooser so it's not in the main skill check function
+                    print("you try to sneak past the guard, hoping your stench doesn't attract him...")
+                    amount_stat_needed = random.randint(1,20)
+
+                    print("required stink is less than: ", amount_stat_needed)
+                    time.sleep(2)
+                    if amount_stat_needed > classes[class_area]["stats"][7]:
+                        print("you successfully evade the guard and enter the building")
+                        phase_one = False
+                        phase_three = False
+                    else:
+                        print("you hadn't showered in the past year apparently so the guard noticed you...")
+                        encounter_decider = 1
+                        skill_check_encounter(encounter_decider)
+                        if success == "y":
+                            print("you enter the building, but you are full of shame...")
+                        else:
+                            while True:
+                                chosen_area = input("even the redditor takes pity on you, you can choose his [b]ody pillow  or authentic [j]apanese katana to take with you... ")
+                                if chosen_area == "i":
+                                    inventory_combine(inventory)
+
+                                elif chosen_area == "b":
+                                    print("you gain a body pillow")
+                                    inventory.append("body pillow")
+
+                                elif chosen_area == "j":
+                                    print("you gain a katana")
+                                    inventory.append("katana")
+                                else:
+                                    print("that's not anything")
+                                phase_three = True
+                                phase_one = False
+
 
                 elif chosen_area == "c":
-                    encounter_decider = 1
+                    encounter_decider = 2
                     success = ""
                     skill_check_encounter(encounter_decider)
                     print(success)
                     if success == "y":
                         print("you have entered the building, the outside now does not exist")
-
                     else:
-                        print("you failed confronting the redditor, you still enter the right side but must now wear the badge of shame permanently")
-                        equipment["headgear"] = "badge of shame"
-                        print(equipment["headgear"])
+                        print("you failed confronting the redditor, you still enter the right side of the building but must now wear the badge of shame permanently")
+                        inventory.append("badge of shame")
                     phase_one = False
                     phase_three = True
+                else:
+                    print("not a correct input")
 
         while phase_two == True:
             asdfasdf = input("")
 
         while phase_three == True:
-            print("")
+
+            input("z")
+
 
 
 
