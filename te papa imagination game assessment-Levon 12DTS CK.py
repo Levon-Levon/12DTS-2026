@@ -16,22 +16,27 @@ import random
 
 #-----------------------------variables-------------------------
 
-inventory = ["grenade","katana"]
+inventory = ["body pillow","holy cheese"]
+cashier_store = ["body pillow","grenade","special key"]
 vending_machine_health = 20
 vending_machine = True
 difficulty = 0
-
+cashier = "alive"
+phase_two_cheese = "virgin"
 player_choosing = True
-
+chosen_area = ""
+door_open = False
 phase_one = True
 phase_two = False
 phase_three = False
+phase_four = False
+phase_five = False
 success = ""
 
 list_for_gaining_stats = [1,3,5,7,9,11,13,15] #probably not efficient but helps when wanting to decrease or increase a certain stat, especially when randomizing
 
 classes = [
-    {"name":"bronie","stats":["strength",88,"charisma",3,"intelligence",9,"vigor",7,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray valus for player
+    {"name":"bronie","stats":["strength",8,"charisma",3,"intelligence",9,"vigor",7,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
     {"name":"csgo try-hard","stats":["strength",6,"charisma",6,"intelligence",8,"vigor",8,"smell",11,"luck",6,"street cred",10,"cash",6]},
     {"name":"prime shivam","stats":["strength",12,"charisma",10,"intelligence",6,"vigor",13,"smell",5,"luck",4,"street cred",6,"cash",10]},
     {"name":"mr. E","stats":["strength",3,"charisma",12,"intelligence",11,"vigor",5,"smell",4,"luck",10,"street cred",12,"cash",21]},
@@ -41,7 +46,8 @@ classes = [
 ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message is blank for when checking if a stat has gone below zero or not
                       "do you want to quit the game? type 1 if you do, type 2 to keep playing.",
                       "you encounter a redditor, type 1 to punch his groin, type 2 to flex reddit karma, type 3 to flex reddit gold",
-                      "you are at a vending machine, type 1 to kick machine, type 2 to purchase soda pop for $5",]
+                      "you are at a vending machine, type 1 to kick machine, type 2 to purchase soda pop for $5",
+                      "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm"]
 
 #--------------------------functions-----------------------------
 
@@ -185,6 +191,56 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
             print("the vending machine was broken")
 
 
+    elif encounter_decider == 4:
+        while True:
+            try:
+                scenario_chosen = int(input("choose which scenario to counter"))
+                if scenario_chosen == 1:
+                    print("you attempt to outsmart the gilded agent")
+                    amount_stat_needed += difficulty
+                    print("required intelligence is: ", amount_stat_needed)
+                    if classes[class_area]["stats"][5] >= amount_stat_needed:
+                        print("you beat him in a chess game, he is shocked and humiliated, you gain 2 intelligence and 5 cash ")
+                        classes[class_area]["stats"][5] += 1
+                        classes[class_area]["stats"][15] += 5
+                        success = "y"
+                    else:
+                        print("he beats you in a game of chess, your brain becomes mushed... -3 intelligence")
+                        classes[class_area]["stats"][5] -= 3
+                elif scenario_chosen == 2:
+                    print("you try to strike him as hard as you can")
+                    amount_stat_needed += difficulty
+                    print("required strength is: ", amount_stat_needed)
+                    if classes[class_area]["stats"][1] >= amount_stat_needed:
+                        print("you successfully take him down, your fists feel as if they are on fire +2 strength +5 cash")
+                        classes[class_area]["stats"][1] += 2
+                        success = "y"
+                    else:
+                        print("his might bests you, you lose all but 1 of your cash as you are knocked out as well as -1 every other stat")
+                        for i in range(0, len(list_for_gaining_stats)):
+                            classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+                        classes[class_area]["stats"][15] = 1
+                elif scenario_chosen == 3:
+                    print("you attempt to flirt with the guy...")
+                    amount_stat_needed += difficulty
+                    print("required charisma is: ", amount_stat_needed)
+                    if classes[class_area]["stats"][3] >= amount_stat_needed:
+                        print("you rizz him up, you gain 1 charisma and double your cash")
+                        classes[class_area]["stats"][5] += 1
+                        classes[class_area]["stats"][15] *= 2
+                        success = "y"
+
+                    else:
+                        print("he gets weirded out and knocks you out... -5 vigor, -1 charisma")
+                        classes[class_area]["stats"][3] -= 1
+                        classes[class_area]["stats"][7] -= 5
+                else:
+                    print("not 1-3 do it again")
+
+            except ValueError:
+                print("that's not a scenario...")
+
+
 
 
 
@@ -206,41 +262,50 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
 def inventory_combine(inventory): #used for combining two items into a stat boost or other item
     while True: #repeats until valid conclusion has been reached
-        katana_soda = False
 
         print("your inventory contains: ", inventory) #shows player all items
         first_item = input("what is the first item you want to combine? or type q to leave crafting")
         if first_item in inventory: #if valid input checks for second item
             second_item = input("what is the second item you want to combine?")
-
             if second_item in inventory: #if valid input looks for combination recipes
 
 
-
-                if first_item == "soda":
-                    if second_item == "katana": #either combination works and disregards many bugs
-                        katana_soda = True
-                elif first_item == "katana":
-                    if second_item == "soda":
-                        katana_soda = True
-
-                elif katana_soda:
-                    print("you sharpened your skills but got liquid all over yourself... you gain 1 strength but gain 1 smell but lose a soda")
+                if first_item == "soda" and second_item == "katana" or first_item == "katana" and second_item == "soda":      #------soda katana recipe------
+                    print("you sharpened your skills but got liquid all over yourself... you gain 1 strength but gain 1 smell and lose a soda")
                     inventory.remove("soda")
                     classes[class_area]["stats"][1] += 1
                     classes[class_area]["stats"][9] += 1
 
+                elif first_item  == "katana" and second_item == "grenade" or first_item == "grenade" and second_item == "katana": # -------grenade katana recipe---------
+                    print("the grenade blows up and you die instantly... game over.")
+                    quit()
+                elif first_item  == "holy cheese" and second_item == "body pillow" or first_item == "body pillow" and second_item == "holy cheese": #---body pillow holy cheese recipe----
+                    print("two heavenly objects have been combined... the gods bless you... (+3 to every stat)")
+                    inventory.remove("body pillow")
+                    inventory.remove("holy cheese")
+                    inventory.append("disgusting pillow")
+                    for i in range(0,len(list_for_gaining_stats)):
+                        classes[class_area]["stats"][list_for_gaining_stats[i]] += 3
+                elif first_item  == "holy cheese" and second_item == "katana" or first_item == "katana" and second_item == "holy cheese":
+                    print("you have done a holy act... for your strength will now be handsomely rewarded... (+6)")
+                    inventory.remove("holy cheese")
+                    classes[class_area]["stats"][1] += 6
+
+
+
                 else:
                     print("you can't combine those two items")
-                break #once combination is done or failed, they return to whatever they were doing, they can return to crafting right after if they want to.
+                 #once combination is done or failed, they return to whatever they were doing, they can return to crafting right after if they want to.
 
             else:
                 print("you don't have that second item combination failed") #tells player what happened
 
+
         elif first_item == "q":
-            break #breaks loop and returns player
+            break #breaks loop and returns player to whatever they were doing
         else:
             print("you dont have that") #error messages to help player understand
+
 
 def quit_or_inventory(chosen_area): #function saves having to type same batch of lines when player is choosing to do anything
     if chosen_area == "q":
@@ -249,7 +314,6 @@ def quit_or_inventory(chosen_area): #function saves having to type same batch of
     elif chosen_area == "i":
         inventory_combine(inventory)
 #----------------------------code------------------------
-
 
 
 while True:
@@ -423,7 +487,7 @@ while True:
                             print("you have entered the building, the outside now does not exist")
                         else:
                             print("you failed confronting the redditor, you still enter the right side of the building but must now wear the badge of shame permanently")
-                            inventory.append("badge of shame")
+                            inventory.append("hat of shame")
                         phase_one = False
                         phase_three = True
                     else:
@@ -433,10 +497,182 @@ while True:
                         time.sleep(2)
 
         while phase_two == True:
-            asdfasdf = input("")
+            chosen_area = input("you see a [d]oor with a special lock, a fat looking [c]ashier, and a [f]resh looking piece of cheese")
+            quit_or_inventory(chosen_area)
+            if chosen_area == "d": #door path
+                if door_open == False:
+                    chosen_area = input("you approach the locked door, you can try to [o]pen door, [d]etonate door or [l]eave")
+                    if chosen_area == "o":
+                        if "special key" in inventory:
+                            inventory.remove("special key")
+                            door_open = True
+                            print("the special key perfectly slots into the lock, and you enter the door with great expectations...")
+                            phase_two = False
+                            phase_five = True
+                        else:
+                            print("you do not have the correct item to open this door")
+                    elif chosen_area == "d":
+                        if "grenade" in inventory:
+                            door_open = True
+                            inventory.remove("grenade")
+                            print("you throw a grenade at the door, blowing it up as well as yourself, -1 to every stat")
+                            time.sleep(1)
+                            print("you have also alerted a high profile guard...")
+                            for i in range(0, len(list_for_gaining_stats)):
+                                classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+                            encounter_decider = 2
+                            difficulty = 5
+                            skill_check_encounter(encounter_decider,difficulty)
+                            if success == "y":
+                                print("you have achieved victory, you may enter through...")
+                            else:
+                                print("you have been bested by the guard...")
+                                time.sleep(2)
+                                print("he throws you out the building")
+                                phase_two = False
+                                phase_one = True
+
+
+
+                        else:
+                            print("you do not have the correct item to open this door")
+
+                    elif chosen_area == "l":
+                        print("you leave the locked door")
+                    else:
+                        print("you stand there awkwardly for a few seconds then leave...")
+                        time.sleep(3)
+                else:
+                    print("you enter through the previously entered door...")
+                    phase_two = False
+                    phase_five = True
+
+
+            elif chosen_area == "c":
+                if cashier == "alive":
+                    chosen_area = input("WELCOME TO MY CHUNKO STORE!!!! I HAVE [a]NIME PILLOWS FOR $9, [g]RENADES FOR $11 AND A [s]UPER DUPER SPECIAL KEY FOR $30!!! or [c]HALLENGE ME FOR MY STORE!!!")
+                    quit_or_inventory(chosen_area)
+                    if chosen_area == "a":
+                        if "body_pillow" in cashier_store:
+                            print("you buy a body pillow from the man... you sick freak")
+                            inventory.append("body pillow")
+                            cashier_store.remove("body pillow")
+                            classes[class_area]["stats"][15] -= 9
+                            print("you now have:",classes[class_area]["stats"][15]," dollars left")
+                            encounter_decider = 0
+                            skill_check_encounter(encounter_decider, difficulty)
+                        else:
+                            print("he doesn't have that anymore")
+                    elif chosen_area == "g":
+                        if "grenade" in cashier_store:
+                            print("you buy a grenade from the man...")
+                            inventory.append("grenade")
+                            cashier_store.remove("grenade")
+                            classes[class_area]["stats"][15] -= 11
+                            print("you now have:",classes[class_area]["stats"][15]," dollars left")
+                            encounter_decider = 0
+                            skill_check_encounter(encounter_decider, difficulty)
+                    elif chosen_area == "s":
+                        if "special key" in cashier_store:
+                            print("you buy a special from the man...")
+                            cashier_store.remove("special key")
+                            inventory.append("special key")
+                            classes[class_area]["stats"][15] -= 30
+                            print("you now have:", classes[class_area]["stats"][15], " dollars left")
+                            encounter_decider = 0
+                            skill_check_encounter(encounter_decider, difficulty)
+                    elif chosen_area == "c":
+                        encounter_decider = 4
+                        difficulty = 8
+                        skill_check_encounter(encounter_decider, difficulty)
+                        if success == "y":
+                            print("the cashier is gone forever... but you have free reign over everything in the store (you take everything)")
+                            cashier = "defeated"
+                            for i in range(0,len(cashier_store)):
+                                inventory.append(cashier_store[i])
+                                cashier_store.remove(cashier_store[i])
+                        else:
+                            print("LOSER LOSER YOU'RE A HUGE LOSERRRRRRR. NEVER COME TO MY STORE AGAIN HEHEHEHEHEHEHEHEHE")
+                            cashier = "you lost"
+                    else:
+                        print("ummmmm...... i don't have that")
+
+                elif cashier == "you lost":
+                        print("I DONT SELL TO LOSERS HAHAHAHAHAHAHA")
+
+                else:
+                    print("he's dead you monster...")
+
+
+            elif chosen_area == "f":
+                if phase_two_cheese == "virgin":
+                    print("you decide to touch the cheese... little did you know it was a TRAP!!!! a powerful gilded agent approaches you")
+
+                    encounter_decider = 4
+                    difficulty = 5
+                    #skill_check_encounter(encounter_decider, difficulty)
+                    if success == "y":
+                        while True:
+                            while phase_two_cheese == "virgin":
+                                chosen_area = input("you defeat the agent and steal a special key hidden in his underpants and 3 dollars :$) do you want to [e]at cheese or [t]ake it?")
+                                classes[class_area]["stats"][15] += 3
+                                inventory.append("special key")
+                                quit_or_inventory(chosen_area)
+                                if chosen_area == "e":
+                                    print("you gain +1 to every stat and feel refreshed")
+                                    phase_two_cheese = "eaten"
+                                    for i in range(0,len(list_for_gaining_stats)):
+                                        classes[class_area]["stats"][list_for_gaining_stats[i]] += 1
+
+                                elif chosen_area == "t":
+                                    print("you gained: holy cheese")
+                                    phase_two_cheese = "taken"
+                                    inventory.append("holy cheese")
+
+                                else:
+                                    print("you have to do something with the cheese...")
+
+                            chosen_area = "do you want to the [r]eturn to the previous area or [c]ontinue down the hall?"
+                            quit_or_inventory(chosen_area)
+                            if chosen_area == "r":
+                                print("you went back...")
+                                break
+                            elif chosen_area == "c":
+                                print("you continue onwards...")
+                                phase_two = False
+                                phase_four = True
+                                break
+
+                            else:
+                                print("invalid input")
+
+                    else:
+                        print("your humiliating defeat distracts the gilded agent... you are able to continue past him further into the building")
+                        phase_two = False
+                        phase_four = True
+
+                else:
+                    print("there was no cheese on the ground... maybe it was just your imagination???")
+                    time.sleep(2)
+                    print("before you have time to reflect, you are approached by an armed guard")
+                    encounter_decider = 2
+                    difficulty = 2
+                    skill_check_encounter(encounter_decider, difficulty)
+                    if success == "y":
+                        print("you continue through the building earning 1 dollar for the victory")
+                        classes[class_area]["stats"][15] += 1
+                        phase_two = False
+                        phase_four = True
+                    else:
+                        print("you are promptly kicked out for such loser behaviour")
+
 
         while phase_three == True:
 
+            input("z")
+        while phase_four == True:
+            input("z")
+        while phase_five == True:
             input("z")
 
 
