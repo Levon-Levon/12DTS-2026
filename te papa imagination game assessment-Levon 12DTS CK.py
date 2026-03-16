@@ -764,5 +764,6 @@ while True:
 
         while phase_four == True:
             input("z")
+            print("")
         while phase_five == True:
             input("z")
