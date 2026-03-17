@@ -36,7 +36,7 @@ success = str
 list_for_gaining_stats = [1,3,5,7,9,11,13,15] #probably not efficient but helps when wanting to decrease or increase a certain stat, especially when randomizing
 
 classes = [
-    {"name":"bronie","stats":["strength",8,"charisma",3,"intelligence",9,"vigor",55,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
+    {"name":"bronie","stats":["strength",8,"charisma",-3,"intelligence",9,"vigor",55,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
     {"name":"csgo try-hard","stats":["strength",6,"charisma",6,"intelligence",8,"vigor",65,"smell",10,"luck",6,"street cred",10,"cash",6]},
     {"name":"prime shivam","stats":["strength",12,"charisma",10,"intelligence",6,"vigor",85,"smell",6,"luck",4,"street cred",6,"cash",10]},
     {"name":"mr. E","stats":["strength",3,"charisma",12,"intelligence",11,"vigor",50,"smell",5,"luck",10,"street cred",12,"cash",21]},
@@ -49,7 +49,7 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "you are at a vending machine, type 1 to kick machine, type 2 to purchase soda pop for $5",
                       "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm",
                       "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
-                      "you encounter Mr. Slime. (1) to "]
+                      "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume"]
 
 #--------------------------functions-----------------------------
 
@@ -59,11 +59,11 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
     global vending_machine_health # i might not need to global since these only exist within function?
     global vending_machine
     global success
-    global inventory
-    every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", ""]
+    mr_slime = 3
+    every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "disgusting pillow","hat of shame"]
 
     print(ENCOUNTER_MESSAGES[encounter_decider]) #saves typing multiple prints for each encounter by recieveing message from list
-    amount_stat_needed = random.randint(0,20)  # rolls an imaginary D20 and if your stat is higher, then you beat encounter.
+    amount_stat_needed = random.randint(0,20+difficulty)  # rolls an imaginary D20 and if your stat is higher, then you beat encounter.
     for i in range(0, len(classes[class_area]["stats"]), 2):  # this loop shows all player stats so they can decide which is best to counter the scenario
         print(classes[class_area]["stats"][i], " = ", classes[class_area]["stats"][i + 1]) #gets first element of  stats list in player dictionary, then visually shows it equal to the next element
 
@@ -92,7 +92,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
                 if scenario_chosen == 1:#-------------------------------------------------------------------redditor scenario------------------------------------------------
                     print("you try to punch the redditor") #prints your attempted action for added clarity
-                    amount_stat_needed += difficulty #based on assumed "difficulty" of encounter required stats will be decreased for ease
+                     #based on assumed "difficulty" of encounter required stats will be decreased for ease
                     print("required strength is: ", amount_stat_needed)  #shows player required stat before ending encounter
                     time.sleep(2)
                     if classes[class_area]["stats"][1] >= amount_stat_needed: #if stat is equal to or greater required then player is rewarded
@@ -106,7 +106,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     break
 
                 elif scenario_chosen == 2:
-                    amount_stat_needed += difficulty
+
                     print("required street cred is: ", amount_stat_needed)
                     if classes[class_area]["stats"][13] >= amount_stat_needed:
                         print("your reddit karma obliviates the redditor, you gain +1 street cred") #set success to y
@@ -117,8 +117,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                         success = ""
                     break
                 elif scenario_chosen == 3:
-                    difficulty -= 7
-                    amount_stat_needed += difficulty
+
                     print("required luck is: ", amount_stat_needed)
                     if classes[class_area]["stats"][11] >= amount_stat_needed:
                         print("your golden soul blesses him, you gain +1 luck and he gives you 1 dollar")
@@ -148,7 +147,6 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     if scenario_chosen == 1:
                         vending_machine_health -= 2
                         print("you kick the vending machine...")
-                        amount_stat_needed += difficulty
                         print("required strength is: ", amount_stat_needed)
                         time.sleep(1)
                         if classes[class_area]["stats"][1] >= amount_stat_needed:
@@ -171,8 +169,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
                     elif scenario_chosen == 2:
                         print("you test your luck to buy a soda pop...")
-                        difficulty -= 7
-                        amount_stat_needed += difficulty
+                        amount_stat_needed -=7
                         print("required luck is: ",amount_stat_needed)
                         time.sleep(1)
                         if classes[class_area]["stats"][11] >= amount_stat_needed:
@@ -210,7 +207,6 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 scenario_chosen = int(input("choose which scenario to counter"))
                 if scenario_chosen == 1:
                     print("you attempt to outsmart the gilded agent")
-                    amount_stat_needed += difficulty
                     print("required intelligence is: ", amount_stat_needed)
                     if classes[class_area]["stats"][5] >= amount_stat_needed:
                         print("you beat him in a chess game, he is shocked and humiliated, you gain 2 intelligence and 5 cash ")
@@ -224,7 +220,6 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     break
                 elif scenario_chosen == 2:
                     print("you try to strike him as hard as you can")
-                    amount_stat_needed += difficulty
                     print("required strength is: ", amount_stat_needed)
                     if classes[class_area]["stats"][1] >= amount_stat_needed:
                         print("you successfully take him down, your fists feel as if they are on fire +2 strength +5 cash")
@@ -239,7 +234,6 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     break
                 elif scenario_chosen == 3:
                     print("you attempt to flirt with the guy...")
-                    amount_stat_needed += difficulty
                     print("required charisma is: ", amount_stat_needed)
                     if classes[class_area]["stats"][3] >= amount_stat_needed:
                         print("you rizz him up, you gain 1 charisma and double your cash")
@@ -258,14 +252,14 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     print("not 1-3 do it again")
 
             except ValueError:
-                print("that's not a scenario...")
+                print("that's not a scenario...")#--------------------------------------------------------               #---------------------------------gilded agent
 
     elif encounter_decider == 5: #-------------------------------------------------------------tarot merchant-------------------------------------------------------
         scenario_chosen = int(input("choose which scenario to counter"))
         if scenario_chosen == 1:
 
             print("you fight a 3AA#2%DF&## type redditor... his toughness has been greatly randomised...")
-            difficulty = random.randint(-20,30)
+            difficulty = random.randint(-20,40)
             encounter_decider = 2
             skill_check_encounter(encounter_decider,difficulty)
             if success == "y":
@@ -302,59 +296,68 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
 
     elif encounter_decider == 6:#------------------------------------------Mr Slime encounter------------------------
-        scenario_chosen = int(input("choose which scenario to counter"))
+        while mr_slime > 0: #if mr slime is alive (his value is drained after successful encounters)
+            is_dead()
+            scenario_chosen = int(input("choose which scenario to counter"))
+            quit_or_inventory(chosen_area) #i need to add this everywhere
+            if scenario_chosen == 1:
+                print("you attempt to steal mr slimes goop... ")  # prints your attempted action for added clarity
+                print("required strength is:",amount_stat_needed)
+                if amount_stat_needed <= classes[class_area]["stats"][1]:
+                    print("your hand penetrates his goopy outer layer... but did you take a poisionious piece of slime?")
+                    amount_stat_needed =random.randint(0,20+difficulty)
+                    print("required luck is:",amount_stat_needed)
+                    if amount_stat_needed <= classes[class_area]["stats"][11]:
+                        print("you steal a bit of his goop (you gain goop), mr slime has been weakened severely...")
+                        inventory.append("goop")
+                        mr_slime -= 1
+                    else:
+                        print("you are poisioned from his goop... you lose 6 vigor") #second losing scenario within first choice
+                        classes[class_area]["stats"][7] -= 6
+                else:
+                    print("your hand gets stuck in his goopy flesh... it hrts now :(... (-1 strength, -3 vigor)") #first losing scenario
+                    classes[class_area]["stats"][1] -=1
+                    classes[class_area]["stats"][7] -= 1
 
-        if scenario_chosen == 1:  # -------------------------------------------------------------------redditor scenario------------------------------------------------
-            print("you try to punch the redditor")  # prints your attempted action for added clarity
-            amount_stat_needed += difficulty  # based on assumed "difficulty" of encounter required stats will be decreased for ease
-            print("required strength is: ", amount_stat_needed)  # shows player required stat before ending encounter
-            time.sleep(2)
-            if classes[class_area]["stats"][
-                1] >= amount_stat_needed:  # if stat is equal to or greater required then player is rewarded
-                print("you successfully punch the redditor, you gain +1 strength")
-                classes[class_area]["stats"][1] += 1
-                success = "y"  # extra global output variable "success" which could potentially be used for deciding ventures for the player
-            else:
-                print(
-                    "your fist bounced off his stomach and hit your face, you lose 1 strength")  # if lower than player is punished
-                classes[class_area]["stats"][1] -= 1
-                success = ""
-
-
-        elif scenario_chosen == 2:
-            amount_stat_needed += difficulty
-            print("required street cred is: ", amount_stat_needed)
-            if classes[class_area]["stats"][13] >= amount_stat_needed:
-                print("your reddit karma obliviates the redditor, you gain +1 street cred")  # set success to y
-                success = "y"
-            else:
-                print("your karma is lower than his (you should post more memes bro), you lose 1 street cred")
-                classes[class_area]["stats"][13] -= 1
-                success = ""
-
-        elif scenario_chosen == 3:
-            difficulty -= 7
-            amount_stat_needed += difficulty
-            print("required luck is: ", amount_stat_needed)
-            if classes[class_area]["stats"][11] >= amount_stat_needed:
-                print("your golden soul blesses him, you gain +1 luck and he gives you 1 dollar")
-                success = "y"
-                classes[class_area]["stats"][11] += 1
-                classes[class_area]["stats"][15] += 1
-            else:
-                print("his gold overwhelms you, you lose 1 dollar for each subreddit this guy moderates (9)")
-                classes[class_area]["stats"][15] -= 9
-                success = ""
-
-
-        else:
-            print("type a number from 1-3")
+            elif scenario_chosen == 2:
+                print(inventory)
+                chosen_area = input("choose an item to use against him...")
+                if chosen_area in inventory:   #if item exists then it goes through all usable items, used for more specific error messages
+                    if chosen_area == "grenade":
+                        print("you attempt to use a grenade")
+                        amount_stat_needed = random.randint(0, 10 + difficulty)
+                        print("required luck is:" ,amount_stat_needed)
+                        if amount_stat_needed <= classes[class_area]["stats"][11]:
+                            inventory.remove("grenade")
+                            print("you blow up a huge chunk of mr slime... but his goop poisons you (-1 to three random stats)")
+                            for i in range(0,2):
+                                one_time_random = random.choice(list_for_gaining_stats)
+                                print("you lose 1:", classes[class_area]["stats"][one_time_random])
+                                classes[class_area]["stats"][one_time_random] -= 1
+                        else:
+                            print("the grenade blows up in your face... you lose 15 vigor")
+                            inventory.remove("grenade")
+                            classes[class_area]["stats"][7] -= 15
 
 
 
-    else:
-        print("")
+                else:
+                    print("you don't have that item")
 
+        print("mr slime has been destroyed")
+
+
+
+
+    is_dead()
+    difficulty = 0
+    return difficulty #reset difficulty for future encounters
+
+
+
+
+
+def is_dead():
     for i in range(1,len(classes[class_area]["stats"]),2): #gets all integer values for stats
         stat_value = classes[class_area]["stats"][i] #sets random variable to whatever value of stat is
         if stat_value <= 0: #if stat is zero or lower, tells player that they lose and quits game...
@@ -362,11 +365,6 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
             time.sleep(2)
             print("goodbye!")
             quit()
-
-    difficulty = 0
-    return difficulty #reset difficulty for future encounters
-
-
 
 
 def inventory_combine(inventory): #used for combining two items into a stat boost or other item
@@ -475,7 +473,8 @@ while True:
         except ValueError: #if player didn't type an integer
             print("invalid input")
 
-
+    encounter_decider = 0
+    skill_check_encounter(encounter_decider,difficulty)
 
     while True:
         while phase_one == True: #start here but player could go to many different points of the game, all phases start out false and certain ones will be unlocked based on specific scenario
