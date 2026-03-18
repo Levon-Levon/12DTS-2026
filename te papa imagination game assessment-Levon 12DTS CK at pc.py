@@ -15,7 +15,7 @@ import random
 
 
 #-----------------------------variables-------------------------
-
+every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", ""]
 inventory = ["body pillow","holy cheese"]
 cashier_store = ["body pillow","grenade","special key"]
 vending_machine_health = 20
@@ -36,10 +36,10 @@ success = str
 list_for_gaining_stats = [1,3,5,7,9,11,13,15] #probably not efficient but helps when wanting to decrease or increase a certain stat, especially when randomizing
 
 classes = [
-    {"name":"bronie","stats":["strength",8,"charisma",3,"intelligence",9,"vigor",7,"smell",99,"luck",99,"street cred",2,"cash",14]}, # has all necesseray values for player
-    {"name":"csgo try-hard","stats":["strength",6,"charisma",6,"intelligence",8,"vigor",8,"smell",11,"luck",6,"street cred",10,"cash",6]},
-    {"name":"prime shivam","stats":["strength",12,"charisma",10,"intelligence",6,"vigor",13,"smell",5,"luck",4,"street cred",6,"cash",10]},
-    {"name":"mr. E","stats":["strength",3,"charisma",12,"intelligence",11,"vigor",5,"smell",4,"luck",10,"street cred",12,"cash",21]},
+    {"name":"bronie","stats":["strength",8,"charisma",-3,"intelligence",9,"vigor",55,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
+    {"name":"csgo try-hard","stats":["strength",6,"charisma",6,"intelligence",8,"vigor",65,"smell",10,"luck",6,"street cred",10,"cash",6]},
+    {"name":"prime shivam","stats":["strength",12,"charisma",10,"intelligence",6,"vigor",85,"smell",6,"luck",4,"street cred",6,"cash",10]},
+    {"name":"mr. E","stats":["strength",3,"charisma",12,"intelligence",11,"vigor",50,"smell",5,"luck",10,"street cred",12,"cash",21]},
 
 
 ]
@@ -47,7 +47,9 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "do you want to quit the game? type 1 if you do, type 2 to keep playing.",
                       "you encounter a redditor, type 1 to punch his groin, type 2 to flex reddit karma, type 3 to flex reddit gold",
                       "you are at a vending machine, type 1 to kick machine, type 2 to purchase soda pop for $5",
-                      "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm"]
+                      "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm",
+                      "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
+                      "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume"]
 
 #--------------------------functions-----------------------------
 
@@ -57,9 +59,11 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
     global vending_machine_health # i might not need to global since these only exist within function?
     global vending_machine
     global success
+    mr_slime = 3
+    every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "disgusting pillow","hat of shame"]
 
     print(ENCOUNTER_MESSAGES[encounter_decider]) #saves typing multiple prints for each encounter by recieveing message from list
-    amount_stat_needed = random.randint(0,20)  # rolls an imaginary D20 and if your stat is higher, then you beat encounter.
+    amount_stat_needed = random.randint(0,20+difficulty)  # rolls an imaginary D20 and if your stat is higher, then you beat encounter.
     for i in range(0, len(classes[class_area]["stats"]), 2):  # this loop shows all player stats so they can decide which is best to counter the scenario
         print(classes[class_area]["stats"][i], " = ", classes[class_area]["stats"][i + 1]) #gets first element of  stats list in player dictionary, then visually shows it equal to the next element
 
@@ -86,9 +90,9 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
             try:
                 scenario_chosen = int(input("choose which scenario to counter"))
 
-                if scenario_chosen == 1:
+                if scenario_chosen == 1:#-------------------------------------------------------------------redditor scenario------------------------------------------------
                     print("you try to punch the redditor") #prints your attempted action for added clarity
-                    amount_stat_needed += difficulty #based on assumed "difficulty" of encounter required stats will be decreased for ease
+                     #based on assumed "difficulty" of encounter required stats will be decreased for ease
                     print("required strength is: ", amount_stat_needed)  #shows player required stat before ending encounter
                     time.sleep(2)
                     if classes[class_area]["stats"][1] >= amount_stat_needed: #if stat is equal to or greater required then player is rewarded
@@ -98,28 +102,32 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     else:
                         print("your fist bounced off his stomach and hit your face, you lose 1 strength") #if lower than player is punished
                         classes[class_area]["stats"][1] -= 1
+                        success = ""
                     break
 
                 elif scenario_chosen == 2:
-                    amount_stat_needed += difficulty
+
                     print("required street cred is: ", amount_stat_needed)
                     if classes[class_area]["stats"][13] >= amount_stat_needed:
                         print("your reddit karma obliviates the redditor, you gain +1 street cred") #set success to y
+                        success = "y"
                     else:
                         print("your karma is lower than his (you should post more memes bro), you lose 1 street cred")
                         classes[class_area]["stats"][13] -= 1
+                        success = ""
                     break
                 elif scenario_chosen == 3:
-                    difficulty -= 7
-                    amount_stat_needed += difficulty
+
                     print("required luck is: ", amount_stat_needed)
                     if classes[class_area]["stats"][11] >= amount_stat_needed:
                         print("your golden soul blesses him, you gain +1 luck and he gives you 1 dollar")
+                        success = "y"
                         classes[class_area]["stats"][11] += 1
                         classes[class_area]["stats"][15] += 1
                     else:
                         print("his gold overwhelms you, you lose 1 dollar for each subreddit this guy moderates (9)")
                         classes[class_area]["stats"][15] -= 9
+                        success = ""
                     break
 
                 else:
@@ -131,7 +139,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
 
 
-    elif encounter_decider == 3: #vending machine scenario
+    elif encounter_decider == 3: #----------------------------------------------------------------------vending machine scenario----------------------------------
         if vending_machine == True: #if vending machine hasn't been broken by previous actions
             while True:
                 try:
@@ -139,18 +147,19 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     if scenario_chosen == 1:
                         vending_machine_health -= 2
                         print("you kick the vending machine...")
-                        amount_stat_needed += difficulty
-                        print("required luck is: ", amount_stat_needed)
+                        print("required strength is: ", amount_stat_needed)
                         time.sleep(1)
                         if classes[class_area]["stats"][1] >= amount_stat_needed:
                             print("you successfully extract a can of soda, the vending machine looks a bit damaged though...")
                             vending_machine_health -= 2
                             inventory.append("soda")
+                            success = "y"
                         else:
                             print("your foot hurts and the vending machine is now damaged and angry >:(, you lose 2 dollars and 1 strength")
                             vending_machine_health -= 1
                             classes[class_area]["stats"][1] -= 1
                             classes[class_area]["stats"][15] -= 2
+                            success = ""
 
                         vending_machine_break = random.randint(0,vending_machine_health)  # picks from 0- whatever the health has become, if 0 then permanent destruction
                         if vending_machine_break <= 0:
@@ -160,19 +169,20 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
                     elif scenario_chosen == 2:
                         print("you test your luck to buy a soda pop...")
-                        difficulty -= 7
-                        amount_stat_needed += difficulty
+                        amount_stat_needed -=7
                         print("required luck is: ",amount_stat_needed)
                         time.sleep(1)
                         if classes[class_area]["stats"][11] >= amount_stat_needed:
                             print("you successfully buy a soda pop, you lose 5 dollars though...")
                             inventory.append("soda")
-                            classes[class_area]["stats"][11] -= 5
+                            classes[class_area]["stats"][15] -= 5
+                            success = "y"
                         else:
                             print("soda got stuck when falling, you bash your head in anger and lose intelligence on top of your money (vending machine gets damaged too)")
                             vending_machine_health -= 1
                             classes[class_area]["stats"][5] -=1
                             classes[class_area]["stats"][15] -= 5
+                            success = ""
                         vending_machine_break = random.randint(0,vending_machine_health)  # picks from 0- whatever the health has become, if 0 then permanent destruction
                         if vending_machine_break <= 0:
                             print("the vending machine has been permanently destroyed...")
@@ -191,13 +201,12 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
             print("the vending machine was broken")
 
 
-    elif encounter_decider == 4:
+    elif encounter_decider == 4:#-------------------------------------------------------------gilded agent------------------------------------
         while True:
             try:
                 scenario_chosen = int(input("choose which scenario to counter"))
                 if scenario_chosen == 1:
                     print("you attempt to outsmart the gilded agent")
-                    amount_stat_needed += difficulty
                     print("required intelligence is: ", amount_stat_needed)
                     if classes[class_area]["stats"][5] >= amount_stat_needed:
                         print("you beat him in a chess game, he is shocked and humiliated, you gain 2 intelligence and 5 cash ")
@@ -207,9 +216,10 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     else:
                         print("he beats you in a game of chess, your brain becomes mushed... -3 intelligence")
                         classes[class_area]["stats"][5] -= 3
+                        success = ""
+                    break
                 elif scenario_chosen == 2:
                     print("you try to strike him as hard as you can")
-                    amount_stat_needed += difficulty
                     print("required strength is: ", amount_stat_needed)
                     if classes[class_area]["stats"][1] >= amount_stat_needed:
                         print("you successfully take him down, your fists feel as if they are on fire +2 strength +5 cash")
@@ -220,35 +230,134 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                         for i in range(0, len(list_for_gaining_stats)):
                             classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
                         classes[class_area]["stats"][15] = 1
+                        success = ""
+                    break
                 elif scenario_chosen == 3:
                     print("you attempt to flirt with the guy...")
-                    amount_stat_needed += difficulty
                     print("required charisma is: ", amount_stat_needed)
                     if classes[class_area]["stats"][3] >= amount_stat_needed:
                         print("you rizz him up, you gain 1 charisma and double your cash")
                         classes[class_area]["stats"][5] += 1
                         classes[class_area]["stats"][15] *= 2
-                        p
+
                         success = "y"
 
                     else:
                         print("he gets weirded out and knocks you out... -5 vigor, -1 charisma")
                         classes[class_area]["stats"][3] -= 1
                         classes[class_area]["stats"][7] -= 5
+                        success = ""
+                    break
                 else:
                     print("not 1-3 do it again")
 
             except ValueError:
-                print("that's not a scenario...")
+                print("that's not a scenario...")#--------------------------------------------------------               #---------------------------------gilded agent
+
+    elif encounter_decider == 5: #-------------------------------------------------------------tarot merchant-------------------------------------------------------
+        scenario_chosen = int(input("choose which scenario to counter"))
+        if scenario_chosen == 1:
+
+            print("you fight a 3AA#2%DF&## type redditor... his toughness has been greatly randomised...")
+            difficulty = random.randint(-20,40)
+            encounter_decider = 2
+            skill_check_encounter(encounter_decider,difficulty)
+            if success == "y":
+                print("YOU DID VERY GOOD SIR HAVE A CHEESE SNACK (you get cheese)")
+                inventory.append("cheese")
+            else:
+                print("YOU WEAK DUMB BOY I BANISH YOU FROM THIS LAND (you get teleported outside of the building)")
+                success = "teleport"
+
+
+
+
+        elif scenario_chosen == 2:
+            amount_stat_needed = random.randint(-30,50)
+            print("required luck is: ", amount_stat_needed)
+            if classes[class_area]["stats"][11] >= amount_stat_needed:
+                one_time_random = random.choice(every_item_in_game)
+                print("WOAHHHHHHHHHHHHHHH THATS AMAAZZZINGGGGGGGGGGGG... (you get a ", one_time_random, ")")
+                inventory.append(one_time_random)
+            else:
+                print("you disgust me... (1 of your stats has been drained to 1)")
+                one_time_random = random.choice(list_for_gaining_stats)
+                classes[class_area]["stats"][one_time_random] = 1
+        elif scenario_chosen == 3:
+
+            amount_stat_needed = random.randint(5,15)
+            one_time_random = random.choice(list_for_gaining_stats)
+
+            classes[class_area]["stats"][one_time_random] += 1
+            print("you bleed for prosperity, you lose: ", amount_stat_needed,"vigor but are rewarded with +1:",classes[class_area]["stats"][one_time_random-1])
+
+            print("you stuff goop in your side pocket...")
+            inventory.append("goop")
+
+
+    elif encounter_decider == 6:#------------------------------------------Mr Slime encounter------------------------
+        while mr_slime > 0: #if mr slime is alive (his value is drained after successful encounters)
+            is_dead()
+            scenario_chosen = int(input("choose which scenario to counter"))
+            quit_or_inventory(chosen_area) #i need to add this everywhere
+            if scenario_chosen == 1:
+                print("you attempt to steal mr slimes goop... ")  # prints your attempted action for added clarity
+                print("required strength is:",amount_stat_needed)
+                if amount_stat_needed <= classes[class_area]["stats"][1]:
+                    print("your hand penetrates his goopy outer layer... but did you take a poisionious piece of slime?")
+                    amount_stat_needed =random.randint(0,20+difficulty)
+                    print("required luck is:",amount_stat_needed)
+                    if amount_stat_needed <= classes[class_area]["stats"][11]:
+                        print("you steal a bit of his goop (you gain goop), mr slime has been weakened severely...")
+                        inventory.append("goop")
+                        mr_slime -= 1
+                    else:
+                        print("you are poisioned from his goop... you lose 6 vigor") #second losing scenario within first choice
+                        classes[class_area]["stats"][7] -= 6
+                else:
+                    print("your hand gets stuck in his goopy flesh... it hrts now :(... (-1 strength, -3 vigor)") #first losing scenario
+                    classes[class_area]["stats"][1] -=1
+                    classes[class_area]["stats"][7] -= 1
+
+            elif scenario_chosen == 2:
+                print(inventory)
+                chosen_area = input("choose an item to use against him...")
+                if chosen_area in inventory:   #if item exists then it goes through all usable items, used for more specific error messages
+                    if chosen_area == "grenade":
+                        print("you attempt to use a grenade")
+                        amount_stat_needed = random.randint(0, 10 + difficulty)
+                        print("required luck is:" ,amount_stat_needed)
+                        if amount_stat_needed <= classes[class_area]["stats"][11]:
+                            inventory.remove("grenade")
+                            print("you blow up a huge chunk of mr slime... but his goop poisons you (-1 to three random stats)")
+                            for i in range(0,2):
+                                one_time_random = random.choice(list_for_gaining_stats)
+                                print("you lose 1:", classes[class_area]["stats"][one_time_random])
+                                classes[class_area]["stats"][one_time_random] -= 1
+                        else:
+                            print("the grenade blows up in your face... you lose 15 vigor")
+                            inventory.remove("grenade")
+                            classes[class_area]["stats"][7] -= 15
+
+
+
+                else:
+                    print("you don't have that item")
+
+        print("mr slime has been destroyed")
+
+
+
+
+    is_dead()
+    difficulty = 0
+    return difficulty #reset difficulty for future encounters
 
 
 
 
 
-
-    else:
-        print("")
-
+def is_dead():
     for i in range(1,len(classes[class_area]["stats"]),2): #gets all integer values for stats
         stat_value = classes[class_area]["stats"][i] #sets random variable to whatever value of stat is
         if stat_value <= 0: #if stat is zero or lower, tells player that they lose and quits game...
@@ -256,11 +365,6 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
             time.sleep(2)
             print("goodbye!")
             quit()
-
-    difficulty = 0
-    return difficulty #reset difficulty for future encounters
-
-
 
 
 def inventory_combine(inventory): #used for combining two items into a stat boost or other item
@@ -314,7 +418,6 @@ def quit_or_inventory(chosen_area): #function saves having to type same batch of
     elif chosen_area == "i":
         inventory_combine(inventory)
 #----------------------------code------------------------
-
 
 while True:
     while True:
@@ -370,6 +473,8 @@ while True:
         except ValueError: #if player didn't type an integer
             print("invalid input")
 
+    encounter_decider = 0
+    skill_check_encounter(encounter_decider,difficulty)
 
     while True:
         while phase_one == True: #start here but player could go to many different points of the game, all phases start out false and certain ones will be unlocked based on specific scenario
@@ -405,7 +510,7 @@ while True:
                                     classes[class_area]["stats"][15] += one_time_random
                                     break
                                 elif chosen_area == "r":
-                                    one_time_random = random.randint(0,len(list_for_gaining_stats))
+                                    one_time_random = random.choice(list_for_gaining_stats)
                                     print("you increased your: ",classes[class_area]["stats"][one_time_random],"by one")
                                     classes[class_area]["stats"][one_time_random] += 1
                                     break
@@ -419,7 +524,9 @@ while True:
                             difficulty = 3
                             skill_check_encounter(encounter_decider,difficulty)
                             if success == "y":
-                                print("you leave battered and bruised")
+                                print("you enter the building feeling battered and bruised... yet successful")
+                                phase_one = False
+                                phase_two = True
                             else:
                                 print("your beating made national headlines, you are coaxed in shame and leave, -1 to all stats")
                                 for i in range(0,len(list_for_gaining_stats)):
@@ -429,10 +536,14 @@ while True:
                     break # breaks phase one loop :D :D :D :D :D :D
 
             elif chosen_area == "m": # mouldy cheese path for phase 1
-                print("you pick up the mouldy cheese and place it in your inventory, you seem to be a little stinkier then before...")
-                classes[class_area]["stats"][9] += 1
+                if phase_one_cheese == "there":
+                    print("you pick up the mouldy cheese and place it in your inventory, you seem to be a little stinkier then before...")
+                    classes[class_area]["stats"][9] += 1
+                    phase_one_cheese = False
+                else:
+                    print("there is no cheese here.... maybe it was just your imagination???")
                 while phase_one == True:
-                    chosen_area = input("as you stuff the cheese in you pocket you notice an entrance by the right side door, but a fat guard is blocking your path, [s]neak, [c]onfront")
+                    chosen_area = input("as you stuff the 'cheese' in your pocket you notice an entrance by the right side door, but a fat guard is blocking your path, [s]neak, [c]onfront")
 
                     quit_or_inventory(chosen_area)
 
@@ -451,8 +562,6 @@ while True:
                             encounter_decider = 2
 
                             skill_check_encounter(encounter_decider,difficulty)
-                            print("!!!!!!!")
-                            print(success)
 
                             if success == "y":
                                 print("you enter the side of the building, but you are full of shame...")
@@ -588,6 +697,7 @@ while True:
                     elif chosen_area == "c":
                         encounter_decider = 4
                         difficulty = 8
+                        print("the cashier rips his clothes off and reveals a hulking body of muscle... this fight is going to be tough...")
                         skill_check_encounter(encounter_decider, difficulty)
                         if success == "y":
                             print("the cashier is gone forever... but you have free reign over everything in the store (you take everything)")
@@ -614,7 +724,7 @@ while True:
 
                     encounter_decider = 4
                     difficulty = 5
-                    #skill_check_encounter(encounter_decider, difficulty)
+                    skill_check_encounter(encounter_decider, difficulty)
                     if success == "y":
                         while True:
                             while phase_two_cheese == "virgin":
@@ -636,7 +746,7 @@ while True:
                                 else:
                                     print("you have to do something with the cheese...")
 
-                            chosen_area = "do you want to the [r]eturn to the previous area or [c]ontinue down the hall?"
+                            chosen_area = input("do you want to the [r]eturn to the previous area or [c]ontinue down the hall?")
                             quit_or_inventory(chosen_area)
                             if chosen_area == "r":
                                 print("you went back...")
@@ -672,9 +782,49 @@ while True:
 
 
         while phase_three == True:
+            chosen_area = input("you enter the side of the building... a [t]arot merchant lays ahead, a [v]ending machine is beside you, a [b]ig strong man blocks a path ahead, [r]eturn.")
+            if chosen_area == "v":
+                difficulty = 0
+                encounter_decider = 3
+                skill_check_encounter(encounter_decider, difficulty)
 
-            input("z")
+
+            elif chosen_area == "t":
+                encounter_decider = 5
+                skill_check_encounter(encounter_decider, difficulty)
+                if success == "teleport":
+                    phase_three = False
+                    phase_one = True
+
+
+            elif chosen_area == "b":
+                encounter_decider = 6
+                skill_check_encounter(encounter_decider, difficulty)
+                if success == "y":
+                    print("the giant lays defeated, you walk past his body with pride")
+                    phase_three = False
+                    phase_five = True
+                else:
+                    print("")
+
+
+
+            elif chosen_area == "r":
+                print("you leave the building")
+                phase_one = True
+                phase_three = False
+            else:
+                print("you stand around doing nothing...")
+                time.sleep(3)
+                print("shockingly nothing happens.")
+                time.sleep(2)
+
+
+
+
+
         while phase_four == True:
             input("z")
+            print("")
         while phase_five == True:
             input("z")
