@@ -825,7 +825,7 @@ while True:
 
 
         while phase_three == True:
-            chosen_area = input("you enter the side of the building... a [t]arot merchant lays ahead, a [v]ending machine is beside you,  ,[r]eturn.")
+            chosen_area = input("you enter the side of the building... a [t]arot merchant lays ahead, a [v]ending machine is beside you, a [w]all of computers sits behind a glass pane  ,[r]eturn.")
             if chosen_area == "v":
                 difficulty = 0
                 encounter_decider = 3
@@ -838,6 +838,18 @@ while True:
                 if success == "teleport":
                     phase_three = False
                     phase_one = True
+            elif chosen_area == "w":
+                chosen_area = input("enter an area with large rows of [c]ubicles and [p]eople sitting at desks, somebody left their [l]aptop open...")
+                if chosen_area == "c":
+                    print("you scan the cubicles ")
+
+                elif chosen_area == "p":
+                    print("you alert a large army of redditors to your location...")
+                    if "hat of shame" in inventory:
+                        print("they take notice of your short comings and grant you a mystical holy cheese (you get holy cheese)")
+                        inventory.append("holy cheese")
+                    elif "katana" in inventory:
+
 
             elif chosen_area == "r":
                 print("you leave the building")
