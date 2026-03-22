@@ -5,6 +5,7 @@
 
 
 
+
 #--------------------------library imports------------------
 import time
 import random
@@ -946,8 +947,18 @@ while True:
                         inventory.append("holy cheese")
                         print("you move further into the building")
                     elif "katana" in inventory:
-                        print()
-                elif chosen_area == "l": #special minigame
+                        print("IT SEEMS THAT YOU WANT A CHALLENGE LITTLE BOY!!!")
+                        for i in range(0,2):
+                            difficulty = 7
+                            skill_check_encounter(encounter_decider, difficulty)
+                            if difficulty == "y":
+                                difficulty +=1
+                            else:
+                                print("YOU HAVE FAILED AGAINST US!!!")
+
+
+
+                elif chosen_area == "l": #special minigames
                     print("you play a funny game on this guys computer...")
 
 
