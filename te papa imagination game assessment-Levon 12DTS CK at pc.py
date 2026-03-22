@@ -4,6 +4,7 @@
 
 
 
+
 #--------------------------library imports------------------
 import time
 import random
@@ -15,7 +16,7 @@ import random
 
 
 #-----------------------------variables-------------------------
-every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", ""]
+every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "goop","cheese","disgusting pillow","hat of shame","soda+"]
 inventory = ["body pillow","holy cheese"]
 cashier_store = ["body pillow","grenade","special key"]
 vending_machine_health = 20
@@ -49,7 +50,7 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "you are at a vending machine, type 1 to kick machine, type 2 to purchase soda pop for $5",
                       "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm",
                       "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
-                      "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume"]
+                      "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume, (or type 4 to run like a wimp)"]
 
 #--------------------------functions-----------------------------
 
@@ -73,11 +74,12 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
     if encounter_decider == 1: #the quitting scenario, always available
        while True: #repeats specific scenario until valid outcome has been reached
            try:
-                scenario_chosen = int(input("")) #each scenario will have multiple outcomes so loop and try and except is neccecery for the multiple outcomes
-                if scenario_chosen == 1: #if valid inputs the 1 and 2 do their correct corresponding actions
+                chosen_area = int(input("")) #each scenario will have multiple outcomes so loop and try and except is neccecery for the multiple outcomes
+                quit_or_inventory(chosen_area)
+                if chosen_area == 1: #if valid inputs the 1 and 2 do their correct corresponding actions
                     print("goodbye!")
                     quit()
-                elif scenario_chosen == 2:
+                elif chosen_area == 2:
                     print("you have chosen to keep playing")
                     break
                 else:
@@ -88,9 +90,10 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
     elif encounter_decider == 2: #corresponding from list
         while True:
             try:
-                scenario_chosen = int(input("choose which scenario to counter"))
+                chosen_area = int(input("choose which scenario to counter"))
+                quit_or_inventory(chosen_area)
 
-                if scenario_chosen == 1:#-------------------------------------------------------------------redditor scenario------------------------------------------------
+                if chosen_area == 1:#-------------------------------------------------------------------redditor scenario------------------------------------------------
                     print("you try to punch the redditor") #prints your attempted action for added clarity
                      #based on assumed "difficulty" of encounter required stats will be decreased for ease
                     print("required strength is: ", amount_stat_needed)  #shows player required stat before ending encounter
@@ -105,7 +108,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                         success = ""
                     break
 
-                elif scenario_chosen == 2:
+                elif chosen_area == 2:
 
                     print("required street cred is: ", amount_stat_needed)
                     if classes[class_area]["stats"][13] >= amount_stat_needed:
@@ -116,7 +119,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                         classes[class_area]["stats"][13] -= 1
                         success = ""
                     break
-                elif scenario_chosen == 3:
+                elif chosen_area == 3:
 
                     print("required luck is: ", amount_stat_needed)
                     if classes[class_area]["stats"][11] >= amount_stat_needed:
@@ -143,8 +146,9 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
         if vending_machine == True: #if vending machine hasn't been broken by previous actions
             while True:
                 try:
-                    scenario_chosen = int(input("choose which scenario to counter")) #choosing scenario
-                    if scenario_chosen == 1:
+                    chosen_area = int(input("choose which scenario to counter")) #choosing scenario
+                    quit_or_inventory(chosen_area)
+                    if chosen_area == 1:
                         vending_machine_health -= 2
                         print("you kick the vending machine...")
                         print("required strength is: ", amount_stat_needed)
@@ -167,7 +171,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                             vending_machine = False
                         break
 
-                    elif scenario_chosen == 2:
+                    elif chosen_area == 2:
                         print("you test your luck to buy a soda pop...")
                         amount_stat_needed -=7
                         print("required luck is: ",amount_stat_needed)
@@ -204,8 +208,9 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
     elif encounter_decider == 4:#-------------------------------------------------------------gilded agent------------------------------------
         while True:
             try:
-                scenario_chosen = int(input("choose which scenario to counter"))
-                if scenario_chosen == 1:
+                chosen_area = int(input("choose which scenario to counter"))
+                quit_or_inventory(chosen_area)
+                if chosen_area == 1:
                     print("you attempt to outsmart the gilded agent")
                     print("required intelligence is: ", amount_stat_needed)
                     if classes[class_area]["stats"][5] >= amount_stat_needed:
@@ -218,7 +223,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                         classes[class_area]["stats"][5] -= 3
                         success = ""
                     break
-                elif scenario_chosen == 2:
+                elif chosen_area == 2:
                     print("you try to strike him as hard as you can")
                     print("required strength is: ", amount_stat_needed)
                     if classes[class_area]["stats"][1] >= amount_stat_needed:
@@ -232,7 +237,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                         classes[class_area]["stats"][15] = 1
                         success = ""
                     break
-                elif scenario_chosen == 3:
+                elif chosen_area == 3:
                     print("you attempt to flirt with the guy...")
                     print("required charisma is: ", amount_stat_needed)
                     if classes[class_area]["stats"][3] >= amount_stat_needed:
@@ -255,8 +260,9 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 print("that's not a scenario...")#--------------------------------------------------------               #---------------------------------gilded agent
 
     elif encounter_decider == 5: #-------------------------------------------------------------tarot merchant-------------------------------------------------------
-        scenario_chosen = int(input("choose which scenario to counter"))
-        if scenario_chosen == 1:
+        chosen_area = int(input("choose which scenario to counter"))
+        quit_or_inventory(chosen_area)
+        if chosen_area == 1:
 
             print("you fight a 3AA#2%DF&## type redditor... his toughness has been greatly randomised...")
             difficulty = random.randint(-20,40)
@@ -272,7 +278,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
 
 
-        elif scenario_chosen == 2:
+        elif chosen_area == 2:
             amount_stat_needed = random.randint(-30,50)
             print("required luck is: ", amount_stat_needed)
             if classes[class_area]["stats"][11] >= amount_stat_needed:
@@ -283,7 +289,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 print("you disgust me... (1 of your stats has been drained to 1)")
                 one_time_random = random.choice(list_for_gaining_stats)
                 classes[class_area]["stats"][one_time_random] = 1
-        elif scenario_chosen == 3:
+        elif chosen_area == 3:
 
             amount_stat_needed = random.randint(5,15)
             one_time_random = random.choice(list_for_gaining_stats)
@@ -298,9 +304,9 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
     elif encounter_decider == 6:#------------------------------------------Mr Slime encounter------------------------
         while mr_slime > 0: #if mr slime is alive (his value is drained after successful encounters)
             is_dead()
-            scenario_chosen = int(input("choose which scenario to counter"))
+            chosen_area = int(input("choose which scenario to counter"))
             quit_or_inventory(chosen_area) #i need to add this everywhere
-            if scenario_chosen == 1:
+            if chosen_area == 1:
                 print("you attempt to steal mr slimes goop... ")  # prints your attempted action for added clarity
                 print("required strength is:",amount_stat_needed)
                 if amount_stat_needed <= classes[class_area]["stats"][1]:
@@ -319,7 +325,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     classes[class_area]["stats"][1] -=1
                     classes[class_area]["stats"][7] -= 1
 
-            elif scenario_chosen == 2:
+            elif chosen_area == 2:
                 print(inventory)
                 chosen_area = input("choose an item to use against him...")
                 if chosen_area in inventory:   #if item exists then it goes through all usable items, used for more specific error messages
@@ -334,15 +340,45 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                                 one_time_random = random.choice(list_for_gaining_stats)
                                 print("you lose 1:", classes[class_area]["stats"][one_time_random])
                                 classes[class_area]["stats"][one_time_random] -= 1
+
                         else:
                             print("the grenade blows up in your face... you lose 15 vigor")
                             inventory.remove("grenade")
                             classes[class_area]["stats"][7] -= 15
-
-
-
+                    else:
+                        print("that item cannot be used") #if item exists but not relevant
                 else:
-                    print("you don't have that item")
+                    print("you don't have that item")#if item doesn't exist or player doesn't have it
+            elif chosen_area == 3:
+                print("you brace for impact and try to consume the positive effects of the goop")
+                amount_stat_needed -= classes[class_area]["stats"][5] #decreases punishment of health based on intelligence
+                if amount_stat_needed <= 0:
+                    amount_stat_needed = 1
+                print("you will lose: ",amount_stat_needed," vigor, your intelligence saved you:",classes[class_area]["stats"][5],"points of vigor")
+                amount_stat_needed = random.randint(0,20+difficulty) - classes[class_area]["stats"][5]  #rerolls for luck
+                print("required luck needed for YUMMY piece of goop: ",amount_stat_needed)
+                if amount_stat_needed <= classes[class_area]["stats"][11]:
+                    while True:
+                        one_time_random = random.choice(list_for_gaining_stats)
+                        if not one_time_random == 7: #if stat is not vigor
+                            print("you gained one: ", classes[class_area]["stats"][one_time_random])
+                            classes[class_area]["stats"][one_time_random]
+                            break #ends loop
+                        else:
+                            one_time_random = random.choice(list_for_gaining_stats) #this is here so nothing happens and it trys to find a stat other than vigor
+                else:
+                    print("you consumed a GROSS piece of goop... you lose 1 intelligence")
+                    classes[class_area]["stats"][5] -= 1
+            elif chosen_area == 4:
+                print("required luck for running away:",amount_stat_needed)
+                if amount_stat_needed <= classes[class_area]["stats"][11]:
+                    print("you successfully run away, but your street cred decreases as a result of your cowardice")
+                    classes[class_area]["stats"][13] -= 1
+                    mr_slime = 0
+                    success = "ran"
+                else:
+                    print("he catches you trying to run away (youre too fat lol) and you lose 3 vigor")
+                    classes[class_area]["stats"][7] -= 3
 
         print("mr slime has been destroyed")
 
@@ -397,6 +433,13 @@ def inventory_combine(inventory): #used for combining two items into a stat boos
                     print("you have done a holy act... for your strength will now be handsomely rewarded... (+7)")
                     inventory.remove("holy cheese")
                     classes[class_area]["stats"][1] += 7
+                elif first_item == "goop" and second_item == "goop": #-----------------------------------goop recipe--------------------------------
+                    if inventory.count("goop") >=2:
+                        print("you combined gunk to create a tasty snack, ( +5 vigor)")
+                        classes[class_area]["stats"][7] += 5
+                    else:
+                        print("not enough goop")
+
                 else:
                     print("you can't combine those two items")
                  #once combination is done or failed, they return to whatever they were doing, they can return to crafting right after if they want to.
@@ -782,7 +825,7 @@ while True:
 
 
         while phase_three == True:
-            chosen_area = input("you enter the side of the building... a [t]arot merchant lays ahead, a [v]ending machine is beside you, a [b]ig strong man blocks a path ahead, [r]eturn.")
+            chosen_area = input("you enter the side of the building... a [t]arot merchant lays ahead, a [v]ending machine is beside you, a [w]all of computers sits behind a glass pane  ,[r]eturn.")
             if chosen_area == "v":
                 difficulty = 0
                 encounter_decider = 3
@@ -795,18 +838,17 @@ while True:
                 if success == "teleport":
                     phase_three = False
                     phase_one = True
+            elif chosen_area == "w":
+                chosen_area = input("enter an area with large rows of [c]ubicles and [p]eople sitting at desks, somebody left their [l]aptop open...")
+                if chosen_area == "c":
+                    print("you scan the cubicles ")
 
-
-            elif chosen_area == "b":
-                encounter_decider = 6
-                skill_check_encounter(encounter_decider, difficulty)
-                if success == "y":
-                    print("the giant lays defeated, you walk past his body with pride")
-                    phase_three = False
-                    phase_five = True
-                else:
-                    print("")
-
+                elif chosen_area == "p":
+                    print("you alert a large army of redditors to your location...")
+                    if "hat of shame" in inventory:
+                        print("they take notice of your short comings and grant you a mystical holy cheese (you get holy cheese)")
+                        inventory.append("holy cheese")
+                    elif "katana" in inventory:
 
 
             elif chosen_area == "r":
@@ -824,7 +866,22 @@ while True:
 
 
         while phase_four == True:
-            input("z")
-            print("")
+            chosen_area = input("you come across a [v]ending machine, [")
+            if chosen_area == "v":
+                encounter_decider = 3
+                skill_check_encounter(encounter_decider,difficulty)
+            elif chosen_area == "b":
+                encounter_decider = 6
+                skill_check_encounter(encounter_decider, difficulty)
+                if success == "ran":
+                    print("you pee your pants and leave the building entirely...")
+                    phase_one = True
+                    phase_three = False
+                else:
+                    print("the great mr slime has been defeated... you are able to progress through further into the building")
+                    phase_three = False
+                    phase_four = True
+
+
         while phase_five == True:
             input("z")
