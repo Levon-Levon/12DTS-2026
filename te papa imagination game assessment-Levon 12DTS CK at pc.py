@@ -55,7 +55,7 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm",
                       "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
                       "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume, (or type 4 to run like a wimp)",
-                      "do you want to play memory test (1), "]
+                      "do you want to play luck test? (1), "]
 
 #--------------------------functions-----------------------------
 
@@ -387,42 +387,27 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     classes[class_area]["stats"][7] -= 3
 
         print("mr slime has been destroyed")
-    elif encounter_decider == 7:
+    elif encounter_decider == 7:#----------------------------------------minigames encounter---------------------------
         chosen_area = int(input("choose which scenario to counter"))
         if chosen_area == 1:
-            number_to_remember = 1
-            mr_slime = 0
-            while mr_slime <= 5:
-                success = "y"
-                one_time_random_one = random.randint(5,20)
-                one_time_random_two = random.randint(9,11)
-                number_to_remember *= one_time_random_one * one_time_random_two
+            limit = 3 #starting limit
+            for i in range(0,limit):
+                one_time_random = random.randint(1,9)
+                if one_time_random in empty_list_for_shenanigans: #if already in numbers then keeps going until there is thre total
+                    limit += 1
+                else:
+                    empty_list_for_shenanigans.append(one_time_random)
 
-                print(number_to_remember)
-                print("REMEMBER THESE NUMBERS!!!!!!")
-                time.sleep(3)
-                for i in range(0,10000): #this doesn't work I have to use some weired other thing to hide numbers...
-                    print("")
-                while True:
-                    try:
-                        chosen_area = int(input("what numbers were they???"))
-                        if chosen_area == number_to_remember:
-                            print("correct")
-                            mr_slime += 1
-
-                        else:
-                            print("WRONGGGGGGGGGGGG")
-                            mr_slime = 6
-                            success = ""
-                        break
-                    except ValueError:
-                        print("what the hell is that????")
+            try:
+                chosen_area = int(input("which number do you think exists in this imaginary list (1-9)???")) #player choice can be redone
+                if chosen_area in empty_list_for_shenanigans:
+                    print("YOU ARE CORRECT!!! THE NUMBER:",chosen_area,"IS PERFECT! HERE WERE ALL POSSIBLE NUMBERS YOU COULD HAVE CHOSEN:",empty_list_for_shenanigans)
+                else:
+                    print("nope that wasn't a possible number... here were the possible numbers:",empty_list_for_shenanigans)
+            except:
+                print("that is not anything")
 
 
-            if success == "y":
-                print("")
-            else:
-                print("get a better brain loser lol")
 
 
 
@@ -504,7 +489,6 @@ def quit_or_inventory(chosen_area): #function saves having to type same batch of
     elif chosen_area == "i":
         inventory_combine(inventory)
 #----------------------------code------------------------
-
 
 while True:
     while True:
@@ -959,14 +943,22 @@ while True:
                     elif chosen_area == "grenade":
                         print("you try to throw the grenade")
                         amount_stat_needed = random.randint(0,20)
-                        if classes[class_area]["stats"][9] >= amount_stat_needed:
-                            print("you bombed the correct amount of syrian children")
+                        if classes[class_area]["stats"][9] > amount_stat_needed:
+                            print("you bombed the correct amount of syrian children (+2 to every stat) (you find a katana and holy cheese)")
+                            inventory.append("holy cheese")
+                            inventory.append("katana")
+                        else:
+                            print("you damage yourself heavily and many redditors are still charging towards your locus")
+
+
 
 
 
 
                 elif chosen_area == "l": #special minigames
                     print("you play a funny game on this guys computer...")
+                    encounter_decider = 7
+                    skill_check_encounter(encouter_decider,difficulty)
 
 
 
