@@ -6,6 +6,7 @@
 
 
 
+
 #--------------------------library imports------------------
 import time
 import random
@@ -559,8 +560,6 @@ while True:
         except ValueError: #if player didn't type an integer
             print("invalid input")
 
-    encounter_decider = 7
-    skill_check_encounter(encounter_decider,difficulty)
 
     while True:
         while phase_one == True: #start here but player could go to many different points of the game, all phases start out false and certain ones will be unlocked based on specific scenario
@@ -942,11 +941,13 @@ while True:
 
                 elif chosen_area == "p":
                     print("you alert a large army of redditors to your location...")
-                    if "hat of shame" in inventory:
+                    print(inventory)
+                    chosen_area = input("which item do you want to use to deterr them...")
+                    if chosen_area == "hat of shame":
                         print("they take notice of your short comings and grant you a mystical holy cheese (you get holy cheese)")
                         inventory.append("holy cheese")
                         print("you move further into the building")
-                    elif "katana" in inventory:
+                    elif chosen_area == "katana":
                         print("IT SEEMS THAT YOU WANT A CHALLENGE LITTLE BOY!!!")
                         for i in range(0,2):
                             difficulty = 7
@@ -955,6 +956,12 @@ while True:
                                 difficulty +=1
                             else:
                                 print("YOU HAVE FAILED AGAINST US!!!")
+                    elif chosen_area == "grenade":
+                        print("you try to throw the grenade")
+                        amount_stat_needed = random.randint(0,20)
+                        if classes[class_area]["stats"][9] >= amount_stat_needed:
+                            print("you bombed the correct amount of syrian children")
+
 
 
 
