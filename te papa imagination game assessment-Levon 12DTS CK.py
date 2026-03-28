@@ -16,9 +16,10 @@ import random
 
 
 #-----------------------------variables-------------------------
-every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "goop","cheese","disgusting pillow","hat of shame","soda"]
+every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "goop","cheese","disgusting pillow","hat of shame","soda","hat of triumph","katana"]
 inventory = ["body pillow","holy cheese"]
 cashier_store = ["body pillow","grenade","special key"]
+endgame_shop = ["holy cheese","hat of triumph","nuke"]
 vending_machine_health = 20
 vending_machine = True
 difficulty = 0
@@ -53,7 +54,7 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm",
                       "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
                       "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume, (or type 4 to run like a wimp)",
-                      "do you want to play memory test (1), "]
+                      "do you want to play memory test (1),"]
 
 #--------------------------functions-----------------------------
 
@@ -261,7 +262,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     print("not 1-3 do it again")
 
             except ValueError:
-                print("that's not a scenario...")#--------------------------------------------------------               #---------------------------------gilded agent
+                print("that's not a scenario...")
 
     elif encounter_decider == 5: #-------------------------------------------------------------tarot merchant-------------------------------------------------------
         chosen_area = int(input("choose which scenario to counter"))
@@ -385,22 +386,20 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     classes[class_area]["stats"][7] -= 3
 
         print("mr slime has been destroyed")
-    elif encounter_decider == 7:
+    elif encounter_decider == 7: #---------------------------------------------------bonus minigames encounters
         chosen_area = int(input("choose which scenario to counter"))
         if chosen_area == 1:
-            number_to_remember = 1
-            mr_slime = 0
+            mr_slime = 1
+            number_to_remember = 1 #this is necesseary so that the number doesn't reset each time the loop is played
             while mr_slime <= 5:
                 success = "y"
                 one_time_random_one = random.randint(5,20)
                 one_time_random_two = random.randint(9,11)
-                number_to_remember *= one_time_random_one * one_time_random_two
+                number_to_remember *= one_time_random_one * one_time_random_two #has three disposable variabls to make
 
                 print(number_to_remember)
                 print("REMEMBER THESE NUMBERS!!!!!!")
                 time.sleep(3)
-                for i in range(0,10000): #this doesn't work I have to use some weired other thing to hide numbers...
-                    print("")
                 while True:
                     try:
                         chosen_area = int(input("what numbers were they???"))
@@ -418,9 +417,13 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
 
             if success == "y":
-                print("")
+                print("you have successfully completed the intelligence game, you get +3 intelligence")
             else:
-                print("get a better brain loser lol")
+                print("get a better brain loser lol (-4 intelligence)")
+        elif chosen_area == 2:
+            print("")
+        else:
+
 
 
 
@@ -502,7 +505,6 @@ def quit_or_inventory(chosen_area): #function saves having to type same batch of
     elif chosen_area == "i":
         inventory_combine(inventory)
 #----------------------------code------------------------
-
 
 while True:
     while True:
@@ -939,16 +941,74 @@ while True:
                         print("you are ashamed... (-1 street cred")
                         classes[class_area]["stats"][13] -= 1
 
-                elif chosen_area == "p":
+                elif chosen_area == "p": #this sections is purposely done in order as each item holds a different level of significance...
                     print("you alert a large army of redditors to your location...")
                     if "hat of shame" in inventory:
                         print("they take notice of your short comings and grant you a mystical holy cheese (you get holy cheese)")
                         inventory.append("holy cheese")
                         print("you move further into the building")
+                        phase_four = False #skipped to end area from this point based on "shameful" item
+                        phase_five = True
                     elif "katana" in inventory:
-                        print()
+                        print("it seems you want a challenge boy... let's see if you're worthy of that Japanese sword...")
+                        encounter_decider = 2
+                        difficulty = 10 #high difficulty because of late game area...
+                        print("(a HUGE swarm of angry redditors is upon you... may god save your soul... ")
+                        limit = 4
+                        for i in range(0,limit): #the fights continue until the player has successfully defeated 5 redditors. A variable is used here to ensure this works.
+                            print("another redditor attacks")
+                            skill_check_encounter(encounter_decider, difficulty)
+                            if success == "y":
+                                print("the redditors take notice of your strength...") #gets rid of one if  victory is returned through "success" variable
+                                limit -=1
+                            else:
+                                print("the redditors take notice of your weakness...")  #no change happens but player is given feedback
+                    elif "body pillow" in inventory:
+                        while True:
+                            chosen_area = input("that is a pretty kawaii body pillow bro... I'll give you like $15 bucks for it... [y]es, [n]o")#more options for this section
+
+                            if chosen_area == "y":
+                                print("COOL THANKS BROOOOO THIS CHARACTER IS SO CUTEEEEEEEE!!!!!!")  #appropriate changes are made
+                                classes[class_area]["stats"][15] += 15
+                                inventory.remove("body pillow")
+                                phase_four = False
+                                phase_five = True
+                                break
+                            elif chosen_area == "n":
+                                print("heh heh heh... you dare deny me of my WAIFUS!!!!")
+                                encounter_decider = 4
+                                difficulty = 8
+                                skill_check_encounter(encounter_decider, difficulty)
+                                if success == "y":
+                                    print("alright bro...... ARGHGHHH YOU KEEP THE PILLOW HERE'S ALL MY MONEY IM SORRY (+30 dollars + 1 to all stats)")
+                                    classes[class_area]["stats"][15] += 30
+                                    for i in range(0, len(list_for_gaining_stats)):
+                                        classes[class_area]["stats"][list_for_gaining_stats[i]] += 1
+                                    phase_four = False
+                                    phase_five = True
+                                    break
+                                else:
+                                    print("YOU SUCKKKKKKKKKKKKKLK (you are kicked out of the building)")
+                                    phase_four = False
+                                    phase_one = True
+                                    break
+
+                    else: #if player has none of the above three items in their inventory
+                        print("all the redditors laugh at you as you walk by because you seem so goddamn boring... -1 to all stats and you lose all your street cred...")
+                        for i in range(0, len(list_for_gaining_stats)):
+                            classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+                        classes[class_area]["stats"][15] = 1
+                        phase_four = False
+                        phase_five = True
+
+
+
+
+
                 elif chosen_area == "l": #special minigame
                     print("you play a funny game on this guys computer...")
+                    encounter_decider = 7
+                    skill_check_encounter(encounter_decider, difficulty)
 
 
 
@@ -992,4 +1052,52 @@ while True:
 
 
         while phase_five == True:
-            input("z")
+            chosen_area = input("you have entered the final zone... do you want to (f)inal battle, (v)ending machine, (t)arot merchant, (e)ndgame shop or (c)owardice teleport? ")
+            quit_or_inventory(chosen_area)
+            if chosen_area == "v":
+                encounter_decider = 3
+                difficulty = 7
+                skill_check_encounter(encounter_decider,difficulty)
+            elif chosen_area == "t":
+                encounter_decider = 5
+                difficulty = 6
+                skill_check_encounter(encounter_decider, difficulty)
+            elif chosen_area == "e":
+                chosen_area = input("hello there... welcome to my humble abode... I sell [h]oly cheese for $20, [d]ome hat of triumph for $25, and [n]uke for $99, you can [f]ight me too i guess... [r]eturn")
+                quit_or_inventory(chosen_area)
+                if chosen_area == "h":
+                    chosen_area = "holy cheese"
+                    if chosen_area in endgame_shop:
+                        endgame_shop.remove(chosen_area)
+                        classes[class_area]["stats"][15] -= 20
+                        print("enjoy your delicious cheeseeee :)")
+                        inventory.append("holy cheese")
+                        encounter_decider = 0
+                        skill_check_encounter(encounter_decider,difficulty)
+                    else:
+                        print("i don't have that anymore...")
+                elif chosen_area == "d":
+                    chosen_area = "hat of triumph"
+                    if chosen_area in endgame_shop:
+                        endgame_shop.remove(chosen_area)
+                        classes[class_area]["stats"][15] -= 25
+                        print("you seem worthy of such a cap")
+                        inventory.append("hat of triumph")
+                        encounter_decider = 0
+                        skill_check_encounter(encounter_decider,difficulty)
+                    else:
+                        print("i don't have that anymore...")
+                elif chosen_area == "n":
+                    chosen_area = "nuke"
+                    if chosen_area in endgame_shop:
+                        endgame_shop.remove(chosen_area)
+                        classes[class_area]["stats"][15] -= 25
+                        print("enjoy your delicious cheeseeee :)")
+                        inventory.append("hat of triumph")
+                        encounter_decider = 0
+                        skill_check_encounter(encounter_decider, difficulty)
+                    else:
+                        print("i don't have that anymore...")
+                elif chosen_area == "f":
+                    print("you seem to underestimate my strength...")
+
