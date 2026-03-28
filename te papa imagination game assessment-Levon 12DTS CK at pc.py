@@ -423,6 +423,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
         elif chosen_area == 2:
             print("")
         else:
+            print("RAGRGHHGH")
 
 
 

@@ -54,7 +54,7 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm",
                       "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
                       "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume, (or type 4 to run like a wimp)",
-                      "do you want to play memory test (1),"]
+                      "do you want to play memory test (1), reaction time battle (2)"]
 
 #--------------------------functions-----------------------------
 
@@ -420,9 +420,53 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 print("you have successfully completed the intelligence game, you get +3 intelligence")
             else:
                 print("get a better brain loser lol (-4 intelligence)")
-        elif chosen_area == 2:
-            print("")
+        elif chosen_area == 2: #---------------------------------------------------reaction time test game---------------------------------
+            print("once you see (NOW!!! (random_key)) press [random_key]. if you are too slow you will lose some health... defeat mr_slime jr to win...")#explanation of rules
+            time.sleep(7)
+
+            slime_jr_health = 3 #sets temporary values to their standard amount that it should be.
+            player_health = 3
+            while True:
+                list_of_random_keys = ["q","t","p","m","n","v"] #set of random keys so that player can't spam the same input
+                start_time = 0
+                end_time = 0 #resets timer values
+                time_stop = "" #resets  variables each time
+                print(player_health)
+                print(slime_jr_health)
+                time_wait = random.randint(2,6) #random amount of time per game
+                time.sleep(time_wait)
+                start_time = time.time() #starts timer once countdown ends
+                one_time_random = random.choice(list_of_random_keys)
+                while True:
+                    print("NOW!!!",one_time_random)
+                    time_stop = input("") #prints what you have to type and this loop checks if correct input was pressed
+                    if time_stop == one_time_random:
+                        break #breaks loop and checks time if correct input is pressed, otherwise keeps going.
+                    else:
+                        print("WRONG INPUT DUDE!!!") #player feedback
+                end_time = time.time()
+                elapsed_time = end_time - start_time #calculates the time taken.
+                print("you took:",elapsed_time,"seconds.")
+                if elapsed_time <= 1.45: #if within the required time limit then opposition loses -1 to its variable
+                    print("GOOD JOB!!! slime jr loses a health...")
+                    slime_jr_health -= 1
+                else:
+                    print("sorry you were to slow you lose some minigame health")
+                    player_health -= 1
+                if slime_jr_health == 0  or player_health == 0:
+                    break
+            if slime_jr_health == 0: #once broken out of loo
+                print("good job for defeating mr slime jr you get +2 street cred and +2 charisma for your fast finger aura!!!")
+                classes[class_area]["stats"][13] += 2
+                classes[class_area]["stats"][3] += 2
+                success = "y"
+            else:
+                print("you lose 5 street cred for you NEGATIVE AURA!!!")
+                classes[class_area]["stats"][13] -= 5
+                success = ""
+
         else:
+            print("BLARGHHH")
 
 
 
@@ -886,7 +930,7 @@ while True:
             elif chosen_area == "w":
                 chosen_area = input(" you enter an area with large rows of [c]ubicles and [p]eople sitting at their desks, somebody left their [l]aptop open.")
                 quit_or_inventory(chosen_area)
-                if chosen_area == "c":
+                if chosen_area == "c": #--------------------------cubicle with large reddit attack---------------------
                     print("you scan the cubicles... and see a hidden pathway leading to an interesting looking doorway, but as you approach you are swarmed by gilded agents and redditors...  ")
                     encounter_decider = 2
                     difficulty = 6
@@ -927,7 +971,7 @@ while True:
                                     inventory.append("goop")
                                     inventory.append("random dead guy in horse costume")
                                 else:
-                                    print("you get some goop, but if feels like something else was here....")
+                                    print("you get some goop, but if feels like something else used to be here....")
                                     inventory.append("goop")
                             phase_three = False
                             phase_four = True
@@ -1000,16 +1044,20 @@ while True:
                         classes[class_area]["stats"][15] = 1
                         phase_four = False
                         phase_five = True
-
-
-
-
-
                 elif chosen_area == "l": #special minigame
                     print("you play a funny game on this guys computer...")
                     encounter_decider = 7
                     skill_check_encounter(encounter_decider, difficulty)
-
+                    if success == "y":
+                        print("your hacking skills go noticed by the redditors around you... they give you +4 karma points and +1 atheist brainpower (+4 street cred, +1 intelligence)")
+                        classes[class_area]["stats"][13] += 4
+                        classes[class_area]["stats"][15] += 1
+                        phase_four = False
+                        phase_five = True
+                    else:
+                        print("the redditors notice your failure and you are kicked out of there cubicles (you lose 5 vigor)")
+                        phase_four = False
+                        phase_one = True
 
 
             elif chosen_area == "r":
