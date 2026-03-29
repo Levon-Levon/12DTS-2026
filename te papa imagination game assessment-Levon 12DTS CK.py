@@ -21,7 +21,7 @@ inventory = ["body pillow","holy cheese"]
 cashier_store = ["body pillow","grenade","special key"]
 endgame_shop = ["holy cheese","hat of triumph","nuke"]
 
-endings = ["meaninglessness ending","failure ending"]
+endings = ["meaninglessness ending","failure ending","loser ending"] #loser ending is if you have digusting pillow and hat of shame
 completed_endings = []
 
 
@@ -63,7 +63,7 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
                       "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume, (or type 4 to run like a wimp)",
                       "do you want to play memory test (1), reaction time battle (2)",
-                      "YOU CANNOT RUN FROM ME YOU BASTARD... 1 to STRIKE 2 to cry, 3 to outwit, 4 to face punishment, 5 to run. "]
+                      "YOU CANNOT RUN FROM ME YOU BASTARD... 1 to STRIKE 2 to cry, 3 to outwit, 4 to face punishment, 5 to use item. "]
 
 #--------------------------functions-----------------------------
 
@@ -71,6 +71,7 @@ def ending_display(chosen_area):#function for storing ending messages when refer
 
     if chosen_area == "1": #if first ending was typed
         if "meaninglessness ending" in completed_endings: #if the player has the correct ending
+            print("meaninglessness ending:")
             print("the ceo of reddit has finally been defeated...")
             time.sleep(4)
             print("millions go homeless... but your karma is now in the billions") #------------ending messages
@@ -78,13 +79,33 @@ def ending_display(chosen_area):#function for storing ending messages when refer
             print("maybe you thought you would feel something... but you are filled with nothing but emptiness...")
             time.sleep(4)
             print("you sit upon the top floor of reddit incorporated, feeling unsatisfied and miserable...")
+            time.sleep(4)
         else:
-            print("???") #prints question marks if player doesn't have ending but still typed the according numbers
+            print("meaninglessness ending requirement: fulfill your most thirsty desire") #win against the final boss regularly
     elif chosen_area == "2": #if second ending was typed
         if "failure ending" in completed_endings: #if player has the second ending
-            print("")
+            print("failure ending:")
+            print("amongst your best efforts, you were not able to defeat Steve Huffman")
+            time.sleep(4)
+            print("he hooks your brain up to some sort of machine, and you become a reddit slave for the rest of your life")
+            time.sleep(4)
+            print("part of you wonders what would have happened if you won, if you would have felt anything more than you do right now.")
+            time.sleep(4)
+            print("oh well, who really cares. Enjoy your time karma farming!!!")
+            time.sleep(4)
         else:
-            print("???") #prints question marks if player doesn't have ending but still typed the according numbers
+            print("failure ending requirement: fail in the face of great mightiness") #lose to the final boss regularly
+    elif chosen_area == "3":
+        if "loser ending" in completed_endings:
+            print("loser ending:")
+            print("your stench is so overwhelming that Steve Huffman jumps out of the window of the skyscraper and is taken to anywhere but this room... ")
+            time.sleep(6)
+            print("you also notice that nobody else is in the building... YOU HAVE IT ALL TO YOURSELFF!!!")
+            time.sleep(4)
+            print("you host a parade with your body pillows, causing so much sweat and oil to leak that the earth forever becomes contaminated... (your parents couldn't be more proud)")
+            time.sleep(7)
+        else: #have disgusting pillow and hat of shame in your inventory when wntering the final boss fight
+            print("loser ending requirement: disgust even the ceo of reddit with items that should be scorched to ash due to their rancidness and inducement of shame")
 
     else:
         print("that is not an ending") #if player types non-included ending number
@@ -507,23 +528,32 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
         else:
             print("BLARGHHH")
 
-    elif encounter_decider == 8:
+    elif encounter_decider == 8:#-------------------------------Steve Huffman (final boss) encounter----------------------------------------------------
         steve_huffman = 5
         while steve_huffman > 0:
             chosen_area = int(input("choose which scenario to counter"))
             quit_or_inventory(chosen_area)
 
 
-            if chosen_area == 1:
+            if chosen_area == 1:#---------------------------------------------strike path------------------------
                 print("you dare try to strike me??? (you lose 1 strength)")
                 classes[class_area]["stats"][1] -= 1
                 amount_stat_needed = random.randint(10,35+difficulty)
                 print("required strength is:",amount_stat_needed)
                 if classes[class_area]["stats"][1] > amount_stat_needed:
-                    print("OUCHHHHHH HOW DARE YOU STRIKE ME!!! (the cashier has been enraged)")
+                    print("OUCHHHHHH HOW DARE YOU STRIKE ME!!! (Steve Huffman has been enraged, he slaps you for -2 vigor)")
                     difficulty +=3
+                    classes[class_area]["stats"][2] -= 3
+                    amount_stat_needed = random.randint(10,25+difficulty)
+                    print("Steve Huffman tries to counter attack...")
+                    print("required intelligence is:",amount_stat_needed)
+                    if classes[class_area]["stats"][7] > amount_stat_needed:
+                        print("ahsdfuagsdfvifuasliougb")
+
                 else:
-                    print("")
+                    print("HAHAHAHA PATHETIC (-1 strength -5 vigor)")
+                    classes[class_area]["stats"][1] -= 1
+                    classes[class_area]["stats"][7] -= 5
 
 
 
@@ -1241,7 +1271,10 @@ while True:
             chosen_area = "1"
             completed_endings.append("meaninglessness ending")
             ending_display(chosen_area)
-
             ending_one = False
-        while ending_two == True:
-            print("you gave it your all but still failed")
+        if ending_two == True:
+            print("you have gotten ending 2: failure ending")
+            chosen_area = "2"
+            completed_endings.append("failure ending")
+            ending_display(chosen_area)
+            ending_two = False
