@@ -20,6 +20,11 @@ every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "g
 inventory = ["body pillow","holy cheese"]
 cashier_store = ["body pillow","grenade","special key"]
 endgame_shop = ["holy cheese","hat of triumph","nuke"]
+
+endings = ["meaninglessness ending","failure ending"]
+completed_endings = []
+
+
 vending_machine_health = 20
 vending_machine = True
 difficulty = 0
@@ -35,6 +40,9 @@ phase_four = False
 phase_five = False
 phase_four_boss = True
 phase_three_reward = True
+
+ending_one = False
+ending_two = False
 success = str
 
 list_for_gaining_stats = [1,3,5,7,9,11,13,15] #probably not efficient but helps when wanting to decrease or increase a certain stat, especially when randomizing
@@ -54,11 +62,32 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "you encounter a gilded agent, type 1 to outsmart, 2 to strike, or 3 to charm",
                       "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
                       "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume, (or type 4 to run like a wimp)",
-                      "do you want to play memory test (1), reaction time battle (2)"]
+                      "do you want to play memory test (1), reaction time battle (2)",
+                      "YOU CANNOT RUN FROM ME YOU BASTARD... 1 to STRIKE 2 to cry, 3 to outwit, 4 to face punishment, 5 to run. "]
 
 #--------------------------functions-----------------------------
 
+def ending_display(chosen_area):#function for storing ending messages when referred to around multiple parts of the game "chosen_area" parameter is for less clutter (like glb var)
 
+    if chosen_area == "1": #if first ending was typed
+        if "meaninglessness ending" in completed_endings: #if the player has the correct ending
+            print("the ceo of reddit has finally been defeated...")
+            time.sleep(4)
+            print("millions go homeless... but your karma is now in the billions") #------------ending messages
+            time.sleep(4)
+            print("maybe you thought you would feel something... but you are filled with nothing but emptiness...")
+            time.sleep(4)
+            print("you sit upon the top floor of reddit incorporated, feeling unsatisfied and miserable...")
+        else:
+            print("???") #prints question marks if player doesn't have ending but still typed the according numbers
+    elif chosen_area == "2": #if second ending was typed
+        if "failure ending" in completed_endings: #if player has the second ending
+            print("")
+        else:
+            print("???") #prints question marks if player doesn't have ending but still typed the according numbers
+
+    else:
+        print("that is not an ending") #if player types non-included ending number
 def skill_check_encounter(encounter_decider,difficulty):#parameters encounter decider is for which scenario they do, difficulty is influenced by how they got there.
     global inventory
     global vending_machine_health # i might not need to global since these only exist within function?
@@ -392,27 +421,37 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
             mr_slime = 1
             number_to_remember = 1 #this is necesseary so that the number doesn't reset each time the loop is played
             while mr_slime <= 5:
-                success = "y"
+                success = "y" #success is defaulted to "y" and only reverts once player loses but stays if they don't.
                 one_time_random_one = random.randint(5,20)
-                one_time_random_two = random.randint(9,11)
-                number_to_remember *= one_time_random_one * one_time_random_two #has three disposable variabls to make
+                one_time_random_two = random.randint(9,11) #picking the two randomised values
+                number_to_remember *= one_time_random_one * one_time_random_two #has three disposable variables to make more randomness
 
                 print(number_to_remember)
                 print("REMEMBER THESE NUMBERS!!!!!!")
                 time.sleep(3)
+                for i in range(0,10000): #this isn't able to hide numbers permanantly but enough to slow player down from checking
+                    print("")
                 while True:
                     try:
-                        chosen_area = int(input("what numbers were they???"))
-                        if chosen_area == number_to_remember:
-                            print("correct")
-                            mr_slime += 1
+                        start_time = time.time() #starts a timer for checking player input speed
 
-                        else:
-                            print("WRONGGGGGGGGGGGG")
+                        chosen_area = int(input("what numbers were they??? (TYPE THIS QUICKLY!!!)")) #player has to type numbers
+                        end_time = time.time() #another timer for end comparison
+                        elapsed_time = end_time - start_time #calculates time
+                        if elapsed_time < 5: #if they were fast enough to type
+                            if chosen_area == number_to_remember:
+                                print("correct") #if they guessed correct
+                                mr_slime += 1 #one step closer to breaking loop if correct
+                            else:
+                                print("WRONGGGGGGGGGGGG") #if they guessed wrong
+                                mr_slime = 6
+                                success = ""
+                        else: #if they were too slow
+                            print("too slow you failed")
                             mr_slime = 6
                             success = ""
                         break
-                    except ValueError:
+                    except ValueError: #appropriate value error message :)
                         print("what the hell is that????")
 
 
@@ -468,7 +507,23 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
         else:
             print("BLARGHHH")
 
+    elif encounter_decider == 8:
+        steve_huffman = 5
+        while steve_huffman > 0:
+            chosen_area = int(input("choose which scenario to counter"))
+            quit_or_inventory(chosen_area)
 
+
+            if chosen_area == 1:
+                print("you dare try to strike me??? (you lose 1 strength)")
+                classes[class_area]["stats"][1] -= 1
+                amount_stat_needed = random.randint(10,35+difficulty)
+                print("required strength is:",amount_stat_needed)
+                if classes[class_area]["stats"][1] > amount_stat_needed:
+                    print("OUCHHHHHH HOW DARE YOU STRIKE ME!!! (the cashier has been enraged)")
+                    difficulty +=3
+                else:
+                    print("")
 
 
 
@@ -553,7 +608,7 @@ def quit_or_inventory(chosen_area): #function saves having to type same batch of
 while True:
     while True:
         try:
-            player_option = int(input("type 1 to start game, type 2 to exit, type 3 for how to play"))
+            player_option = int(input("type 1 to start game, type 2 to exit, type 3 for how to play, type 4 to see endings"))
             if player_option == 1:
                 print("you have started the game")
                 break
@@ -566,6 +621,26 @@ while True:
                 print("type the first letter as indicated in [] to move to/do a scenario or type i to access inventory and q to quit the game")
                 time.sleep(2)
                 print("you lose the game if any stat (including cash) is reduced to zero or lower")
+            elif player_option == 4: #ending viewer option in main menu
+                for i in range(0,len(endings)): #prints amounts of endings
+                    endings_check = endings[i] #sets other variable to check for variable in another list by setting the value to the according ending in the list
+                    if endings_check in completed_endings: #adds status after ending to improve player readability. checks if endings are in list of completed ones
+                        status = "completed" #if have gotten ending then it will show as completed
+                    else:
+                        status = "incomplete" #if haven't gotten ending then will show incomplete
+                    print("ending", i + 1, "=", endings[i]) #prints according messages displaying the ending name and the status later
+                    print("status: ", status)
+                    print("")
+                try:
+                    chosen_area = input("type according numbers of each ending to display the ending... only works if you have completed the ending at least once (type q to promptly leave)")
+                    if chosen_area == "q": #this is more clean then showing the "thats not an ending" message in the function
+                        print("")
+                    else:
+                        ending_display(chosen_area) #if player didn't want to quit then refers to function
+                except ValueError:
+                    print("what the heck is that????")
+
+
             else:
                 print("type a number from 1-3")
         except ValueError:
@@ -1102,7 +1177,17 @@ while True:
         while phase_five == True:
             chosen_area = input("you have entered the final zone... do you want to (f)inal battle, (v)ending machine, (t)arot merchant, (e)ndgame shop or (c)owardice teleport? ")
             quit_or_inventory(chosen_area)
-            if chosen_area == "v":
+            if chosen_area == "f":
+                encounter_decider = 8
+                skill_check_encounter(encounter_decider,difficulty)
+                if success == "y":
+                    ending_one = True
+                else:
+                    ending_two = True
+                phase_five = False
+
+
+            elif chosen_area == "v":
                 encounter_decider = 3
                 difficulty = 7
                 skill_check_encounter(encounter_decider,difficulty)
@@ -1140,12 +1225,23 @@ while True:
                     if chosen_area in endgame_shop:
                         endgame_shop.remove(chosen_area)
                         classes[class_area]["stats"][15] -= 25
-                        print("enjoy your delicious cheeseeee :)")
-                        inventory.append("hat of triumph")
+                        print("...")
+                        inventory.append("nuke")
                         encounter_decider = 0
                         skill_check_encounter(encounter_decider, difficulty)
                     else:
                         print("i don't have that anymore...")
                 elif chosen_area == "f":
                     print("you seem to underestimate my strength...")
+                    encounter_decider = "i dont know yet but not 8"
+                    skill_check_encounter(encounter_decider, difficulty)
 
+        if ending_one == True:
+            print("you have gotten ending 1: meaninglessness ending")
+            chosen_area = "1"
+            completed_endings.append("meaninglessness ending")
+            ending_display(chosen_area)
+
+            ending_one = False
+        while ending_two == True:
+            print("you gave it your all but still failed")
