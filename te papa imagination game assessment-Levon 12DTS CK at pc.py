@@ -21,8 +21,8 @@ inventory = ["body pillow","holy cheese"]
 cashier_store = ["body pillow","grenade","special key"]
 endgame_shop = ["holy cheese","hat of triumph","nuke"]
 
-endings = ["meaninglessness ending","failure ending","loser ending"] #loser ending is if you have digusting pillow and hat of shame
-completed_endings = ["meaninglessness ending","failure ending","loser ending"]
+endings = ["meaninglessness ending","failure ending","loser ending","business partnership ending"] #loser ending is if you have digusting pillow and hat of shame
+completed_endings = ["meaninglessness ending","failure ending","loser ending","business partnership ending"]
 
 
 vending_machine_health = 20
@@ -49,7 +49,7 @@ success = str
 list_for_gaining_stats = [1,3,5,7,9,11,13,15] #probably not efficient but helps when wanting to decrease or increase a certain stat, especially when randomizing
 list_of_phases = [phase_one,phase_two,phase_three,phase_four,phase_five]
 classes = [
-    {"name":"bronie","stats":["strength",8,"charisma",5,"intelligence",9,"vigor",55,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
+    {"name":"bronie","stats":["strength",88,"charisma",5,"intelligence",9,"vigor",55,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
     {"name":"csgo try-hard","stats":["strength",6,"charisma",6,"intelligence",8,"vigor",65,"smell",10,"luck",6,"street cred",10,"cash",6]},
     {"name":"prime shivam","stats":["strength",12,"charisma",10,"intelligence",6,"vigor",85,"smell",6,"luck",4,"street cred",6,"cash",10]},
     {"name":"mr. E","stats":["strength",3,"charisma",12,"intelligence",11,"vigor",50,"smell",5,"luck",10,"street cred",12,"cash",21]},
@@ -64,7 +64,7 @@ ENCOUNTER_MESSAGES = ["", #messages correspond to each scenario, first message i
                       "DO YOU WANT TO TEST YOUR SKILLS? (1), TEST YOUR FATE? (2), OR BLEED FOR PROSPERITY? (3)",
                       "you encounter Mr. Slime. type 1 to steal goop, type 2 to use item, type 3 to brace for impact and consume, (or type 4 to run like a wimp)",
                       "do you want to play memory test (1), reaction time battle (2)",
-                      "YOU CANNOT RUN FROM ME YOU BASTARD... 1 to STRIKE 2 to cry, 3 to outwit, 4 to face punishment, 5 to use item. "]
+                      "YOU CANNOT RUN FROM ME YOU BASTARD... 1 to STRIKE, 2 to cry, 3 to plead, 4 to face punishment, 5 to use item. "]
 
 #--------------------------functions-----------------------------
 
@@ -107,7 +107,21 @@ def ending_display(chosen_area):#function for storing ending messages when refer
             time.sleep(7)
         else: #have disgusting pillow and hat of shame in your inventory when wntering the final boss fight
             print("loser ending requirement: disgust even the ceo of reddit with items that should be scorched to ash due to their rancidness and inducement of shame")
-
+    elif chosen_area == "4":
+        if "business partnership ending" in completed_endings:
+            print("business partnership ending:")
+            print("you are able to convince the CEO of reddit that a business partner ship would be the best course of action for each other and the rest of the world...")
+            time.sleep(6)
+            print("you are surrounded by infinite wealth (you hack your reddit for infinite karma aswell)")
+            time.sleep(4)
+            print("though technically happy and all-powerful, you seem to feel as if some primal desire was not fulfilled; there was something that you did not do correctly...")
+            time.sleep(5)
+            print("you brush the thought aside and lie down on your infinite pile of wealth...")
+            time.sleep(5)
+            print("you are happy, yet will be forever unsatisfied.")
+            time.sleep(8)
+        else:
+            print("business partnership ending requirement: convince Steve Huffman about the extent of your potential")
     else:
         print("that is not an ending") #if player types non-included ending number
 def skill_check_encounter(encounter_decider,difficulty):#parameters encounter decider is for which scenario they do, difficulty is influenced by how they got there.
@@ -115,7 +129,6 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
     global vending_machine_health # i might not need to global since these only exist within function?
     global vending_machine
     global success
-    empty_list_for_shenanigans = []
     mr_slime = 3
     every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "disgusting pillow","hat of shame"]
 
@@ -223,16 +236,9 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                             success = ""
                             break
 
-                        vending_machine_break = random.randint(0,vending_machine_health)  # picks from 0- whatever the health has become, if 0 then permanent destruction
-                        if vending_machine_break <= 0:
-                            print("the vending machine has been permanently destroyed...")
-                            vending_machine = False
-                            break
-
-
                     elif chosen_area == 2:
                         print("you test your luck to buy a soda pop...")
-                        amount_stat_needed -=7
+                        amount_stat_needed += difficulty
                         print("required luck is: ",amount_stat_needed)
                         time.sleep(1)
                         if classes[class_area]["stats"][11] >= amount_stat_needed:
@@ -240,17 +246,15 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                             inventory.append("soda")
                             classes[class_area]["stats"][15] -= 5
                             success = "y"
+                            break
                         else:
                             print("soda got stuck when falling, you bash your head in anger and lose intelligence on top of your money (vending machine gets damaged too)")
                             vending_machine_health -= 1
                             classes[class_area]["stats"][5] -=1
                             classes[class_area]["stats"][15] -= 5
                             success = ""
-                        vending_machine_break = random.randint(0,vending_machine_health)  # picks from 0- whatever the health has become, if 0 then permanent destruction
-                        if vending_machine_break <= 0:
-                            print("the vending machine has been permanently destroyed...")
-                            vending_machine = False
-                        break
+                            break
+
 
 
                     else:
@@ -259,6 +263,10 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
                 except ValueError:
                     print("type a valid number")
+            vending_machine_break = random.randint(0,vending_machine_health)  # picks from 0- whatever the health has become, if 0 then permanent destruction
+            if vending_machine_break <= 0: # if chosen value was zero. "<=" sign was added if it potentially goes below zero (which is possible)
+                print("the vending machine has been permanently destroyed...")
+                vending_machine = False # can't access vending machine at all
 
         else:
             print("the vending machine was broken")
@@ -545,19 +553,70 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 amount_stat_needed = random.randint(10,35+difficulty)
                 print("required strength is:",amount_stat_needed)
                 if classes[class_area]["stats"][1] > amount_stat_needed:
-                    print("OUCHHHHHH HOW DARE YOU STRIKE ME!!! (Steve Huffman has been enraged, he slaps you for -2 vigor)")
+                    print("OUCHHHHHH HOW DARE YOU STRIKE ME!!! (Steve Huffman has been enraged, he is now permanently stronger)") #difficulty goes up by three
                     difficulty +=3
-                    classes[class_area]["stats"][2] -= 3
                     amount_stat_needed = random.randint(10,25+difficulty)
                     print("Steve Huffman tries to counter attack...")
                     print("required intelligence is:",amount_stat_needed)
-                    if classes[class_area]["stats"][7] > amount_stat_needed:
-                        print("ahsdfuagsdfvifuasliougb")
+                    if classes[class_area]["stats"][7] >= amount_stat_needed: #if you beat strength test and intelligence he loses health
+                        steve_huffman -= 1
+                        print("HOW DID YOU DODGE THAT!!!! NOOOOOOOOOOO (steve huffman loses 1 health, he is now at:",steve_huffman,"health")
+                    else:
+                        print("I AM TOO SMART FOR MERE MORTALS LIKE YOU (-1 strength -2 intelligence)")
+                        classes[class_area]["stats"][5] -= 2
+                        classes[class_area]["stats"][1] -= 1
 
                 else:
                     print("HAHAHAHA PATHETIC (-1 strength -5 vigor)")
                     classes[class_area]["stats"][1] -= 1
                     classes[class_area]["stats"][7] -= 5
+            elif chosen_area == 2: #-----------------------------crying eyes out luck stat choice-------------------
+                print("you decide cry your eyes out... (a high luck stat is optimal for success)")
+                amount_stat_needed = random.randint(1,10)
+                amount_stat_needed *= classes[class_area]["stats"][11]
+                if 30 >= amount_stat_needed:
+                    print("you are so pathetic that steve huffman pats you on the head and gives you a soda")
+                    print("(you get a soda),")
+                    inventory.append("soda")
+                    print("but due to your patheticness 3 of your stats are drained by 1")
+                    for i in range(0,3):
+                        chosen_stat = random.choice(list_for_gaining_stats)
+                        classes[class_area]["stats"][chosen_stat] -= 1
+                elif 100>= amount_stat_needed >= 31:
+                    print("steve huffman laughs at your pity... but you are able to strike him while he is down... (he has been permanantly weakened but you lose 2 vigor) ")
+
+                    difficulty -= 2
+                    classes[class_area]["stats"][7] -= 2
+                else:
+                    print("your tears are nothing but streams of healing fountains... able to cure any disease in history... (+10 vigor, steve huffman has been GREATLY weakened)")
+                    classes[class_area]["stats"][7] += 10
+                    difficulty -= 5
+            elif chosen_area == 3:
+                if "hat of triumph" in inventory and "hat of shame" not in inventory: #if they have hat of triumph but NOT the hat of shame
+                    print("you beg for mercy...")
+                    amount_stat_needed = random.randint(0,40+difficulty)
+
+                    if classes[class_area]["stats"][3] >= amount_stat_needed:
+                        chosen_area = input("he begins to listen to your pleading do you [c]ontinue to persuade... or [any input] to give up?")
+
+                        if chosen_area == "c":
+                            print("you tell him how much you love his jacket and funko pops")
+                            amount_stat_needed = random.randint(20,30+difficulty)
+
+                            if classes[class_area]["stats"][3] >= amount_stat_needed:
+                                chosen_area = input("he seems greatly satisfied with your words... but is not sure of your motive? ([c]ontinue, or [any input] to give up?")
+                                if chosen_area == "c":
+                                    print("you tell him about the wonders that you and him could create together...")
+                                    amount_stat_needed = random.randint(30,40+difficulty)
+                                    if classes[class_area]["stats"][3] >= amount_stat_needed:
+                                        steve_huffman = 0
+                                        success = "business partnership ending"
+                                        print("you have gotten ending 4: business partnership ending")
+
+
+                else:
+                    print("you try to plead for mercy... but you do not seem to have the correct attire to persuade him... (-1 charisma)")
+                    classes[class_area]["stats"][3] -= 1
 
 
 
@@ -772,7 +831,10 @@ while True:
                                     classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
                                 encounter_decider = 0
                                 skill_check_encounter(encounter_decider,difficulty) #checks if a stat went below 0
-                    break # breaks phase one loop :D :D :D :D :D :D
+                        phase_one = False
+                        break # breaks phase one loop :D :D :D :D :D :D
+                    elif chosen_area == "r":
+                        print("LEVOM YOU NEED TO DO THIS YOU FUCKING IDIOT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
             elif chosen_area == "m": # mouldy cheese path for phase 1
                 if phase_one_cheese == "there":
@@ -838,7 +900,7 @@ while True:
                         if success == "y":
                             print("you have entered the building, the outside now does not exist")
                         else:
-                            print("you failed confronting the redditor, you still enter the right side of the building but must now wear the badge of shame permanently")
+                            print("you failed confronting the redditor, you still enter the right side of the building but now wear the hat of shame")
                             inventory.append("hat of shame")
                         phase_one = False
                         phase_three = True
@@ -1183,7 +1245,8 @@ while True:
 
 
         while phase_four == True:
-            chosen_area = input("you come across a [v]ending machine, a large [b]oss stands in the way")
+            chosen_area = input("As you reach the final stages of the building, you come across a [v]ending machine, and a large [b]oss stands in the way")
+            quit_or_inventory(chosen_area)
             if chosen_area == "v":
                 encounter_decider = 3
                 skill_check_encounter(encounter_decider,difficulty)
@@ -1195,11 +1258,11 @@ while True:
                         print("you pee your pants and leave the building entirely...")
                         phase_one = True
                         phase_four = False
-                        phase_four_boss = False
                     else:
                         print("the great mr slime has been defeated... you are able to progress through further into the building")
                         phase_four = False
                         phase_five = True
+                        phase_four_boss = False
                 else:
                     print("as you pass through you notice a glob of goop on the ground... you take it. (you gained goop)")
                     inventory.append("goop")
@@ -1213,10 +1276,16 @@ while True:
             if chosen_area == "f":
                 encounter_decider = 8
                 skill_check_encounter(encounter_decider,difficulty)
-                if success == "y":
+
+                if success == "meaninglessness ending":
                     ending_one = True
-                else:
+                elif success == "failure ending":
                     ending_two = True
+                elif success == "loser ending":
+                    ending_three = True
+                elif success == "business partnership ending":
+                    ending_four = True
+
                 phase_five = False
 
 
@@ -1257,7 +1326,7 @@ while True:
                     chosen_area = "nuke"
                     if chosen_area in endgame_shop:
                         endgame_shop.remove(chosen_area)
-                        classes[class_area]["stats"][15] -= 25
+                        classes[class_area]["stats"][15] -= 99
                         print("...")
                         inventory.append("nuke")
                         encounter_decider = 0
@@ -1275,9 +1344,18 @@ while True:
             completed_endings.append("meaninglessness ending")
             ending_display(chosen_area)
             ending_one = False
-        if ending_two == True:
+        elif ending_two == True:
             print("you have gotten ending 2: failure ending")
             chosen_area = "2"
             completed_endings.append("failure ending")
             ending_display(chosen_area)
             ending_two = False
+        elif ending_three == True:
+            print("")
+        elif ending_four == True:
+            print("you have gotten ending 4: business partnership ending")
+            chosen_area = "4"
+            completed_endings.append("business partnership ending")
+            ending_display(chosen_area)
+            steve_huffman = 0
+            success = "y"
