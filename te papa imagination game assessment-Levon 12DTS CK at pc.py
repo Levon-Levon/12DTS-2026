@@ -332,7 +332,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
         if chosen_area == 1:
 
             print("you fight a 3AA#2%DF&## type redditor... his toughness has been greatly randomised...")
-            difficulty = random.randint(-20,40)
+            difficulty += random.randint(-20,40)
             encounter_decider = 2
             skill_check_encounter(encounter_decider,difficulty)
             if success == "y":
@@ -542,6 +542,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
     elif encounter_decider == 8:#-------------------------------Steve Huffman (final boss) encounter----------------------------------------------------
         steve_huffman = 5
+        steve_huffman_difficulty = 0
         while steve_huffman > 0:
             chosen_area = int(input("choose which scenario to counter"))
             quit_or_inventory(chosen_area)
@@ -550,12 +551,12 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
             if chosen_area == 1:#---------------------------------------------strike path------------------------
                 print("you dare try to strike me??? (you lose 1 strength)")
                 classes[class_area]["stats"][1] -= 1
-                amount_stat_needed = random.randint(10,35+difficulty)
+                amount_stat_needed = random.randint(10,35+steve_huffman_difficulty)
                 print("required strength is:",amount_stat_needed)
                 if classes[class_area]["stats"][1] > amount_stat_needed:
                     print("OUCHHHHHH HOW DARE YOU STRIKE ME!!! (Steve Huffman has been enraged, he is now permanently stronger)") #difficulty goes up by three
                     difficulty +=3
-                    amount_stat_needed = random.randint(10,25+difficulty)
+                    amount_stat_needed = random.randint(10,35+steve_huffman_difficulty)
                     print("Steve Huffman tries to counter attack...")
                     print("required intelligence is:",amount_stat_needed)
                     if classes[class_area]["stats"][7] >= amount_stat_needed: #if you beat strength test and intelligence he loses health
@@ -585,38 +586,85 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 elif 100>= amount_stat_needed >= 31:
                     print("steve huffman laughs at your pity... but you are able to strike him while he is down... (he has been permanantly weakened but you lose 2 vigor) ")
 
-                    difficulty -= 2
+                    steve_huffman_difficulty -= 2
                     classes[class_area]["stats"][7] -= 2
                 else:
                     print("your tears are nothing but streams of healing fountains... able to cure any disease in history... (+10 vigor, steve huffman has been GREATLY weakened)")
                     classes[class_area]["stats"][7] += 10
-                    difficulty -= 5
-            elif chosen_area == 3:
+                    steve_huffman_difficulty -= 5
+
+
+            elif chosen_area == 3:#---------------------------------------charisma path----------------------------------
                 if "hat of triumph" in inventory and "hat of shame" not in inventory: #if they have hat of triumph but NOT the hat of shame
                     print("you beg for mercy...")
-                    amount_stat_needed = random.randint(0,40+difficulty)
+                    amount_stat_needed = random.randint(0,40+steve_huffman_difficulty)
 
                     if classes[class_area]["stats"][3] >= amount_stat_needed:
                         chosen_area = input("he begins to listen to your pleading do you [c]ontinue to persuade... or [any input] to give up?")
 
                         if chosen_area == "c":
                             print("you tell him how much you love his jacket and funko pops")
-                            amount_stat_needed = random.randint(20,30+difficulty)
+                            amount_stat_needed = random.randint(20,30+steve_huffman_difficulty)
 
                             if classes[class_area]["stats"][3] >= amount_stat_needed:
                                 chosen_area = input("he seems greatly satisfied with your words... but is not sure of your motive? ([c]ontinue, or [any input] to give up?")
+
                                 if chosen_area == "c":
                                     print("you tell him about the wonders that you and him could create together...")
-                                    amount_stat_needed = random.randint(30,40+difficulty)
+                                    amount_stat_needed = random.randint(30,40+steve_huffman_difficulty)
                                     if classes[class_area]["stats"][3] >= amount_stat_needed:
                                         steve_huffman = 0
                                         success = "business partnership ending"
                                         print("you have gotten ending 4: business partnership ending")
+                                    else:
+                                        print("you did not convince him, and he is greatly angered... game over...")
+                                        success = "failure ending"
+                                        print("you have gotten ending 2: failure ending")
+                                        steve_huffman = 0
+                                else:
+                                    print("you nibble his toes as a sign of gratitude... he giggles but kicks you out of anger (+2 charisma -3 vigor. He has been permanently weakened)")
+                                    classes[class_area]["stats"][3] += 2
+                                    classes[class_area]["stats"][7] -= 3
+                                    steve_huffman_difficulty -= 2
+
+                            else:
+                                print("he is enraged that you were able to fool him to this degree... he slaps you for 10 vigor he is now permanently slightly harder...")
+                                classes[class_area]["stats"][7] -= 10
+                                steve_huffman_difficulty +=1
+                        else:
+                            print("he gets confused for a while and sees you as a pretty female but also slaps you once he regains conciousness. (+1 charisma -2 vigor)")
+                            classes[class_area]["stats"][3] += 1
+                            classes[class_area]["stats"][7] -= 2
+
+                    else:
+                        print("you were not convincing in the slightest, he kicks you in the face and it becomes kind of screwed up (-1 charisma -5 vigor) ")
+                        classes[class_area]["stats"][3] -= 1
+                        classes[class_area]["stats"][7] -= 5
 
 
                 else:
                     print("you try to plead for mercy... but you do not seem to have the correct attire to persuade him... (-1 charisma)")
                     classes[class_area]["stats"][3] -= 1
+
+
+            elif chosen_area == 4:
+                print("you are taken to a random encounter in the game... the difficulty has been GREATLY increased...")
+                difficulty = random.randint(15,25)
+                chosen_area = random.randint(2,7) #excludes bossfight
+                skill_check_encounter(chosen_area,difficulty) #does function within the function...
+                if success == "y":
+                    print("Much of steve Huffman's power was used for that... he has been greatly weakened permanantly")
+                    steve_huffman_difficulty -= 4
+                else:
+                    print("his strength consumes you... (-1 to all stats, he is now permanently harder)")
+                    steve_huffman_difficulty +=2
+                    for i in range(0, len(list_for_gaining_stats)):
+                        classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+
+            elif chosen_area == 5:
+                chosen_area = input("which item would you like to use???")
+                if chosen_area == "katana":
+                    print("blahlahlahlalh")
 
 
 
@@ -1351,7 +1399,11 @@ while True:
             ending_display(chosen_area)
             ending_two = False
         elif ending_three == True:
-            print("")
+            print("you have gotten ending 3: loser ending")
+            chosen_area = "3"
+            completed_endings.append("loser ending")
+            ending_display(chosen_area)
+
         elif ending_four == True:
             print("you have gotten ending 4: business partnership ending")
             chosen_area = "4"
