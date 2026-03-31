@@ -664,7 +664,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
             elif chosen_area == 5:
                 chosen_area = input("which item would you like to use???")
                 if chosen_area == "katana":
-                    print("blahlahlahlalh")
+                    print("blahlahlahalh")
 
 
 
