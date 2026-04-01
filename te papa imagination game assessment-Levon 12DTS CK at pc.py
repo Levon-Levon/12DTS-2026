@@ -34,7 +34,7 @@ phase_two_cheese = "virgin"
 player_choosing = True
 chosen_area = ""
 door_open = False
-phase_one = True
+phase_one = False
 phase_two = False
 phase_three = False
 phase_four = False
@@ -49,7 +49,7 @@ success = str
 list_for_gaining_stats = [1,3,5,7,9,11,13,15] #probably not efficient but helps when wanting to decrease or increase a certain stat, especially when randomizing
 list_of_phases = [phase_one,phase_two,phase_three,phase_four,phase_five]
 classes = [
-    {"name":"bronie","stats":["strength",88,"charisma",5,"intelligence",9,"vigor",55,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
+    {"name":"bronie","stats":["strength",8,"charisma",5,"intelligence",9,"vigor",55,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
     {"name":"csgo try-hard","stats":["strength",6,"charisma",6,"intelligence",8,"vigor",65,"smell",10,"luck",6,"street cred",10,"cash",6]},
     {"name":"prime shivam","stats":["strength",12,"charisma",10,"intelligence",6,"vigor",85,"smell",6,"luck",4,"street cred",6,"cash",10]},
     {"name":"mr. E","stats":["strength",3,"charisma",12,"intelligence",11,"vigor",50,"smell",5,"luck",10,"street cred",12,"cash",21]},
@@ -135,8 +135,26 @@ def ending_display(chosen_area):#function for storing ending messages when refer
             time.sleep(4)
         else:
             print("decimation ending: make an irresponsible and world ending decision with an item that you should NOT have.")
+    elif chosen_area == "6":
+        if "true ending" in completed_endings:
+            print("You reach Steve Huffman's room, your everglowing aura alerts him of your presence instantly")
+            time.sleep(5)
+            print("you have seen an infinitude of possibilities, each flowing in and out of reality after every passing moment...")
+            time.sleep(6)
+            print("You realise that your true happiness came from understanding, not murder, profound failure, or self-gluttony")
+            time.sleep(8)
+            print("you smile at Steve Huffman.")
+            time.sleep(6)
+            print("You thank him, and leave, your true purpose has finally been fulfilled.")
+            time.sleep(5)
+            print("Goodbye!")
+            time.sleep(4)
+            quit()
+        else:
+            print("true ending requirement: become onmipotent")
     else:
         print("that is not an ending") #if player types non-included ending number
+
 def skill_check_encounter(encounter_decider,difficulty):#parameters encounter decider is for which scenario they do, difficulty is influenced by how they got there.
     global inventory
     global vending_machine_health # i might not need to global since these only exist within function?
@@ -240,14 +258,14 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                             vending_machine_health -= 2
                             inventory.append("soda")
                             success = "y"
-                            break
+
                         else:
                             print("your foot hurts and the vending machine is now damaged and angry >:(, you lose 2 dollars and 1 strength")
                             vending_machine_health -= 1
                             classes[class_area]["stats"][1] -= 1
                             classes[class_area]["stats"][15] -= 2
                             success = ""
-                            break
+                        break
 
                     elif chosen_area == 2:
                         print("you test your luck to buy a soda pop...")
@@ -340,51 +358,60 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 print("that's not a scenario...")
 
     elif encounter_decider == 5: #-------------------------------------------------------------tarot merchant-------------------------------------------------------
-        chosen_area = int(input("choose which scenario to counter"))
-        quit_or_inventory(chosen_area)
-        if chosen_area == 1:
+        while True:
+            chosen_area = int(input("choose which scenario to counter"))
+            quit_or_inventory(chosen_area)
+            if chosen_area == 1:
 
-            print("you fight a 3AA#2%DF&## type redditor... his toughness has been greatly randomised...")
-            difficulty += random.randint(-20,40)
-            encounter_decider = 2
-            skill_check_encounter(encounter_decider,difficulty)
-            if success == "y":
-                print("YOU DID VERY GOOD SIR HAVE A CHEESE SNACK (you get cheese)")
-                inventory.append("cheese")
-            else:
-                print("YOU WEAK DUMB BOY I BANISH YOU FROM THIS LAND (you get teleported outside of the building)")
-                success = "teleport"
+                print("you fight a 3AA#2%DF&## type redditor... his toughness has been greatly randomised...")
+                difficulty += random.randint(-20,40)
+                encounter_decider = 2
+                skill_check_encounter(encounter_decider,difficulty)
+                if success == "y":
+                    print("YOU DID VERY GOOD SIR HAVE A CHEESE SNACK (you get cheese)")
+                    inventory.append("cheese")
+                else:
+                    print("YOU WEAK DUMB BOY I BANISH YOU FROM THIS LAND (you get teleported outside of the building)")
+                    success = "teleport"
+                break
 
 
 
 
-        elif chosen_area == 2:
-            amount_stat_needed = random.randint(-30,50)
-            print("required luck is: ", amount_stat_needed)
-            if classes[class_area]["stats"][11] >= amount_stat_needed:
-                one_time_random = random.choice(every_item_in_game)
-                print("WOAHHHHHHHHHHHHHHH THATS AMAAZZZINGGGGGGGGGGGG... (you get a ", one_time_random, ")")
-                inventory.append(one_time_random)
-            else:
-                print("you disgust me... (1 of your stats has been drained to 1)")
+            elif chosen_area == 2:
+                amount_stat_needed = random.randint(-30,50)
+                print("required luck is: ", amount_stat_needed)
+                if classes[class_area]["stats"][11] >= amount_stat_needed:
+                    one_time_random = random.choice(every_item_in_game)
+                    print("WOAHHHHHHHHHHHHHHH THATS AMAAZZZINGGGGGGGGGGGG... (you get a ", one_time_random, ")")
+                    inventory.append(one_time_random)
+                else:
+                    print("you disgust me... (1 of your stats has been drained to 1)")
+                    one_time_random = random.choice(list_for_gaining_stats)
+                    classes[class_area]["stats"][one_time_random] = 1
+                break
+            elif chosen_area == 3:
+
+                amount_stat_needed = random.randint(5,15)
                 one_time_random = random.choice(list_for_gaining_stats)
-                classes[class_area]["stats"][one_time_random] = 1
-        elif chosen_area == 3:
 
-            amount_stat_needed = random.randint(5,15)
-            one_time_random = random.choice(list_for_gaining_stats)
+                classes[class_area]["stats"][one_time_random] += 1
+                print("you bleed for prosperity, you lose: ", amount_stat_needed,"vigor but are rewarded with +1:",classes[class_area]["stats"][one_time_random-1])
+                classes[class_area]["stats"][7] -= one_time_random
 
-            classes[class_area]["stats"][one_time_random] += 1
-            print("you bleed for prosperity, you lose: ", amount_stat_needed,"vigor but are rewarded with +1:",classes[class_area]["stats"][one_time_random-1])
+                print("you stuff goop in your side pocket...")
+                inventory.append("goop")
+                break
+            else:
+                print("you don't do anything of note...")
 
-            print("you stuff goop in your side pocket...")
-            inventory.append("goop")
 
 
     elif encounter_decider == 6:#------------------------------------------Mr Slime encounter------------------------
         while mr_slime > 0: #if mr slime is alive (his value is drained after successful encounters)
             is_dead()
             chosen_area = int(input("choose which scenario to counter"))
+
             quit_or_inventory(chosen_area) #i need to add this everywhere
             if chosen_area == 1:
                 print("you attempt to steal mr slimes goop... ")  # prints your attempted action for added clarity
@@ -462,96 +489,102 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
         print("mr slime has been destroyed")
     elif encounter_decider == 7: #---------------------------------------------------bonus minigames encounters
-        chosen_area = int(input("choose which scenario to counter"))
-        if chosen_area == 1:
-            mr_slime = 1
-            number_to_remember = 1 #this is necesseary so that the number doesn't reset each time the loop is played
-            while mr_slime <= 5:
-                success = "y" #success is defaulted to "y" and only reverts once player loses but stays if they don't.
-                one_time_random_one = random.randint(5,20)
-                one_time_random_two = random.randint(9,11) #picking the two randomised values
-                number_to_remember *= one_time_random_one * one_time_random_two #has three disposable variables to make more randomness
+        while True:
+            try:
+                chosen_area = int(input("choose which scenario to counter"))
+                if chosen_area == 1:
+                    mr_slime = 1
+                    number_to_remember = 1 #this is necesseary so that the number doesn't reset each time the loop is played
+                    while mr_slime <= 5:
+                        success = "y" #success is defaulted to "y" and only reverts once player loses but stays if they don't.
+                        one_time_random_one = random.randint(5,20)
+                        one_time_random_two = random.randint(9,11) #picking the two randomised values
+                        number_to_remember *= one_time_random_one * one_time_random_two #has three disposable variables to make more randomness
 
-                print(number_to_remember)
-                print("REMEMBER THESE NUMBERS!!!!!!")
-                time.sleep(3)
-                for i in range(0,10000): #this isn't able to hide numbers permanantly but enough to slow player down from checking
-                    print("")
-                while True:
-                    try:
-                        start_time = time.time() #starts a timer for checking player input speed
+                        print(number_to_remember)
+                        print("REMEMBER THESE NUMBERS!!!!!!")
+                        time.sleep(3)
+                        for i in range(0,10000): #this isn't able to hide numbers permanantly but enough to slow player down from checking
+                            print("")
+                        while True:
+                            try:
+                                start_time = time.time() #starts a timer for checking player input speed
 
-                        chosen_area = int(input("what numbers were they??? (TYPE THIS QUICKLY!!!)")) #player has to type numbers
-                        end_time = time.time() #another timer for end comparison
-                        elapsed_time = end_time - start_time #calculates time
-                        if elapsed_time < 5: #if they were fast enough to type
-                            if chosen_area == number_to_remember:
-                                print("correct") #if they guessed correct
-                                mr_slime += 1 #one step closer to breaking loop if correct
-                            else:
-                                print("WRONGGGGGGGGGGGG") #if they guessed wrong
-                                mr_slime = 6
-                                success = ""
-                        else: #if they were too slow
-                            print("too slow you failed")
-                            mr_slime = 6
-                            success = ""
-                        break
-                    except ValueError: #appropriate value error message :)
-                        print("what the hell is that????")
+                                chosen_area = int(input("what numbers were they??? (TYPE THIS QUICKLY!!!)")) #player has to type numbers
+                                end_time = time.time() #another timer for end comparison
+                                elapsed_time = end_time - start_time #calculates time
+                                if elapsed_time < 5: #if they were fast enough to type
+                                    if chosen_area == number_to_remember:
+                                        print("correct") #if they guessed correct
+                                        mr_slime += 1 #one step closer to breaking loop if correct
+                                    else:
+                                        print("WRONGGGGGGGGGGGG") #if they guessed wrong
+                                        mr_slime = 6
+                                        success = ""
+                                else: #if they were too slow
+                                    print("too slow you failed")
+                                    mr_slime = 6
+                                    success = ""
+                                break
+                            except ValueError: #appropriate value error message :)
+                                print("what the hell is that????")
 
 
-            if success == "y":
-                print("you have successfully completed the intelligence game, you get +3 intelligence")
-            else:
-                print("get a better brain loser lol (-4 intelligence)")
-        elif chosen_area == 2: #---------------------------------------------------reaction time test game---------------------------------
-            print("once you see (NOW!!! (random_key)) press [random_key]. if you are too slow you will lose some health... defeat mr_slime jr to win...")#explanation of rules
-            time.sleep(7)
-
-            slime_jr_health = 3 #sets temporary values to their standard amount that it should be.
-            player_health = 3
-            while True:
-                list_of_random_keys = ["q","t","p","m","n","v"] #set of random keys so that player can't spam the same input
-                start_time = 0
-                end_time = 0 #resets timer values
-                time_stop = "" #resets  variables each time
-                print(player_health)
-                print(slime_jr_health)
-                time_wait = random.randint(2,6) #random amount of time per game
-                time.sleep(time_wait)
-                start_time = time.time() #starts timer once countdown ends
-                one_time_random = random.choice(list_of_random_keys)
-                while True:
-                    print("NOW!!!",one_time_random)
-                    time_stop = input("") #prints what you have to type and this loop checks if correct input was pressed
-                    if time_stop == one_time_random:
-                        break #breaks loop and checks time if correct input is pressed, otherwise keeps going.
+                    if success == "y":
+                        print("you have successfully completed the intelligence game, you get +3 intelligence")
                     else:
-                        print("WRONG INPUT DUDE!!!") #player feedback
-                end_time = time.time()
-                elapsed_time = end_time - start_time #calculates the time taken.
-                print("you took:",elapsed_time,"seconds.")
-                if elapsed_time <= 1.45: #if within the required time limit then opposition loses -1 to its variable
-                    print("GOOD JOB!!! slime jr loses a health...")
-                    slime_jr_health -= 1
-                else:
-                    print("sorry you were to slow you lose some minigame health")
-                    player_health -= 1
-                if slime_jr_health == 0  or player_health == 0:
-                    break
-            if slime_jr_health == 0: #once broken out of loo
-                print("good job for defeating mr slime jr you get +2 street cred and +2 charisma for your fast finger aura!!!")
-                classes[class_area]["stats"][13] += 2
-                classes[class_area]["stats"][3] += 2
-                success = "y"
-            else:
-                print("you lose 5 street cred for you NEGATIVE AURA!!!")
-                classes[class_area]["stats"][13] -= 5
-                success = ""
+                        print("get a better brain loser lol (-4 intelligence)")
+                elif chosen_area == 2: #---------------------------------------------------reaction time test game---------------------------------
+                    print("once you see (NOW!!! (random_key)) press [random_key]. if you are too slow you will lose some health... defeat mr_slime jr to win...")#explanation of rules
+                    time.sleep(7)
 
-        else:
-            print("BLARGHHH")
+                    slime_jr_health = 3 #sets temporary values to their standard amount that it should be.
+                    player_health = 3
+                    while True:
+                        list_of_random_keys = ["q","t","p","m","n","v"] #set of random keys so that player can't spam the same input
+                        start_time = 0
+                        end_time = 0 #resets timer values
+                        time_stop = "" #resets  variables each time
+                        print(player_health)
+                        print(slime_jr_health)
+                        time_wait = random.randint(2,6) #random amount of time per game
+                        time.sleep(time_wait)
+                        start_time = time.time() #starts timer once countdown ends
+                        one_time_random = random.choice(list_of_random_keys)
+                        while True:
+                            print("NOW!!!",one_time_random)
+                            time_stop = input("") #prints what you have to type and this loop checks if correct input was pressed
+                            if time_stop == one_time_random:
+                                break #breaks loop and checks time if correct input is pressed, otherwise keeps going.
+                            else:
+                                print("WRONG INPUT DUDE!!!") #player feedback
+                        end_time = time.time()
+                        elapsed_time = end_time - start_time #calculates the time taken.
+                        print("you took:",elapsed_time,"seconds.")
+                        if elapsed_time <= 1.45: #if within the required time limit then opposition loses -1 to its variable
+                            print("GOOD JOB!!! slime jr loses a health...")
+                            slime_jr_health -= 1
+                        else:
+                            print("sorry you were to slow you lose some minigame health")
+                            player_health -= 1
+                        if slime_jr_health == 0  or player_health == 0:
+                            break
+                    if slime_jr_health == 0: #once broken out of loo
+                        print("good job for defeating mr slime jr you get +2 street cred and +2 charisma for your fast finger aura!!!")
+                        classes[class_area]["stats"][13] += 2
+                        classes[class_area]["stats"][3] += 2
+                        success = "y"
+                    else:
+                        print("you lose 5 street cred for you NEGATIVE AURA!!!")
+                        classes[class_area]["stats"][13] -= 5
+                        success = ""
+
+                else:
+                    print("that's not a a correct input")
+
+
+            except ValueError:
+                print("not a valid number")
 
     elif encounter_decider == 8:#-------------------------------Steve Huffman (final boss) encounter----------------------------------------------------
         if "meaninglessness ending" and "failure ending" and "loser ending" and "business partnership ending" and "decimation ending" not in completed_endings:
@@ -792,13 +825,21 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
 
 def is_dead():
+    global phase_one
+    global phase_two
+    global phase_three
+    global phase_four
+    global phase_five
     for i in range(1,len(classes[class_area]["stats"]),2): #gets all integer values for stats
         stat_value = classes[class_area]["stats"][i] #sets random variable to whatever value of stat is
         if stat_value <= 0: #if stat is zero or lower, tells player that they lose and quits game...
-            print("your",classes[class_area]["stats"][i-1],"stat is unsatisfactory, terminating player...")
+            print("your",classes[class_area]["stats"][i-1],"stat is unsatisfactory, you now have to restart...")
             time.sleep(2)
-            print("goodbye!")
-            quit()
+            phase_one == False
+            phase_two == False
+            phase_three == False
+            phase_four == False
+            phase_five == False
 
 
 def inventory_combine(inventory): #used for combining two items into a stat boost or other item
@@ -935,7 +976,7 @@ while True:
             print("invalid input")
 
 
-
+    phase_one = True
     while True:
         while phase_one == True: #start here but player could go to many different points of the game, all phases start out false and certain ones will be unlocked based on specific scenario
             chosen_area = input("you stand at the front gates of the large corporate building, you notice a [v]ending machine,the [f]ront gates, and a [m]ouldy piece of cheese on the ground. ")
@@ -996,7 +1037,19 @@ while True:
                         phase_one = False
                         break # breaks phase one loop :D :D :D :D :D :D
                     elif chosen_area == "r":
-                        print("LEVOM YOU NEED TO DO THIS YOU FUCKING IDIOT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        print("you decide to try and brute force your way through the redditor...")
+                        encounter_decider = 3
+                        skill_check_encounter(encounter_decider,difficulty)
+                        if success == "y":
+                            print("you progress through to the next area... your stats have been all increased by one")
+                            for i in range(0, len(list_for_gaining_stats)):
+                                classes[class_area]["stats"][list_for_gaining_stats[i]] += 1
+                            phase_one = False
+                            phase_two = True
+                        else:
+                            print("your failure makes great headlines as this is an embarrassing loss (-3 street cred)")
+                            classes[class_area]["stats"][13] -= 3
+
 
             elif chosen_area == "m": # mouldy cheese path for phase 1
                 if phase_one_cheese == "there":
@@ -1129,7 +1182,7 @@ while True:
                     chosen_area = input("WELCOME TO MY CHUNKO STORE!!!! I HAVE [a]NIME PILLOWS FOR $9, [g]RENADES FOR $11 AND A [s]UPER DUPER SPECIAL KEY FOR $30!!! or [c]HALLENGE ME FOR MY STORE!!!")
                     quit_or_inventory(chosen_area)
                     if chosen_area == "a":
-                        if "body_pillow" in cashier_store:
+                        if "body pillow" in cashier_store:
                             print("you buy a body pillow from the man... you sick freak")
                             inventory.append("body pillow")
                             cashier_store.remove("body pillow")
@@ -1453,7 +1506,7 @@ while True:
                 phase_five = False
                 phase_one = True
             elif chosen_area == "e":
-                chosen_area = input("hello there... welcome to my humble abode... I sell [h]oly cheese for $20, [d]ome hat of triumph for $25, and [n]uke for $99, you can [f]ight me too i guess... [r]eturn")
+                chosen_area = input("hello there... welcome to my humble abode... I sell [h]oly cheese for $20, [d]ome hat of triumph for $25, and [n]uke for $99, [r]eturn")
                 quit_or_inventory(chosen_area)
                 if chosen_area == "h":
                     if "holy cheese" in endgame_shop:
@@ -1484,8 +1537,4 @@ while True:
                         encounter_decider = 0
                         skill_check_encounter(encounter_decider, difficulty)
                     else:
-                        print("i don't have that anymore...")
-                elif chosen_area == "f":
-                    print("you seem to underestimate my strength...")
-                    encounter_decider = "i dont know yet but not 8"
-                    skill_check_encounter(encounter_decider, difficulty)
+                        print("I don't have that anymore...")
