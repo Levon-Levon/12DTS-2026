@@ -10,18 +10,14 @@ import time
 import random
 
 
-
-
-
-
-
 #-----------------------------variables-------------------------
-every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "goop","cheese","disgusting pillow","hat of shame","soda","hat of triumph","katana","nuke"]
-inventory = ["body pillow","holy cheese"]
+EVERY_ITEM_IN_GAME = ["body pillow", "holy cheese", "grenade", "special key", "goop","cheese","disgusting pillow","hat of shame","soda","hat of triumph","katana","nuke",
+                      "random dead guy in horse costume"]
+inventory = ["body pillow"]
 cashier_store = ["body pillow","grenade","special key"]
 endgame_shop = ["holy cheese","hat of triumph","nuke"]
 
-endings = ["meaninglessness ending","failure ending","loser ending","business partnership ending","decimation ending","true ending"]
+ENDINGS = ["meaninglessness ending","failure ending","loser ending","business partnership ending","decimation ending","true ending"]
 completed_endings = []
 
 
@@ -46,8 +42,8 @@ ending_one = False
 ending_two = False
 success = str
 
-list_for_gaining_stats = [1,3,5,7,9,11,13,15] #probably not efficient but helps when wanting to decrease or increase a certain stat, especially when randomizing
-list_of_phases = [phase_one,phase_two,phase_three,phase_four,phase_five]
+LIST_FOR_GAINING_STATS = [1,3,5,7,9,11,13,15] #probably not efficient but helps when wanting to decrease or increase a certain stat, especially when randomizing
+LIST_OF_PHASES = [phase_one,phase_two,phase_three,phase_four,phase_five]
 classes = [
     {"name":"bronie","stats":["strength",8,"charisma",5,"intelligence",9,"vigor",55,"smell",12,"luck",11,"street cred",2,"cash",14]}, # has all necesseray values for player
     {"name":"csgo try-hard","stats":["strength",6,"charisma",6,"intelligence",8,"vigor",65,"smell",10,"luck",6,"street cred",10,"cash",6]},
@@ -161,7 +157,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
     global vending_machine
     global success
     mr_slime = 3
-    every_item_in_game = ["body pillow", "holy cheese", "grenade", "special key", "goop","cheese","disgusting pillow","hat of shame","soda","hat of triumph","katana","nuke"]
+    EVERY_ITEM_IN_GAME = ["body pillow", "holy cheese", "grenade", "special key", "goop","cheese","disgusting pillow","hat of shame","soda","hat of triumph","katana","nuke"]
 
     print(ENCOUNTER_MESSAGES[encounter_decider]) #saves typing multiple prints for each encounter by recieveing message from list
     amount_stat_needed = random.randint(0,20+difficulty)  # rolls an imaginary D20 and if your stat is higher, then you beat encounter.
@@ -330,8 +326,8 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                         success = "y"
                     else:
                         print("his might bests you, you lose all but 1 of your cash as you are knocked out as well as -1 every other stat")
-                        for i in range(0, len(list_for_gaining_stats)):
-                            classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+                        for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                            classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] -= 1
                         classes[class_area]["stats"][15] = 1
                         success = ""
                     break
@@ -382,20 +378,20 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 amount_stat_needed = random.randint(-30,50)
                 print("required luck is: ", amount_stat_needed)
                 if classes[class_area]["stats"][11] >= amount_stat_needed:
-                    one_time_random = random.choice(every_item_in_game)
+                    one_time_random = random.choice(EVERY_ITEM_IN_GAME)
                     print("WOAHHHHHHHHHHHHHHH THATS AMAAZZZINGGGGGGGGGGGG... (you get a ", one_time_random, ")")
                     inventory.append(one_time_random)
                     success = "y"
                 else:
                     print("you disgust me... (1 of your stats has been drained to 1)")
-                    one_time_random = random.choice(list_for_gaining_stats)
+                    one_time_random = random.choice(LIST_FOR_GAINING_STATS)
                     classes[class_area]["stats"][one_time_random] = 1
                     success = ""
                 break
             elif chosen_area == 3:
 
                 amount_stat_needed = random.randint(5,15)
-                one_time_random = random.choice(list_for_gaining_stats)
+                one_time_random = random.choice(LIST_FOR_GAINING_STATS)
 
                 classes[class_area]["stats"][one_time_random] += 1
                 print("you bleed for prosperity, you lose: ", amount_stat_needed,"vigor but are rewarded with +1:",classes[class_area]["stats"][one_time_random-1])
@@ -447,7 +443,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                             inventory.remove("grenade")
                             print("you blow up a huge chunk of mr slime... but his goop poisons you (-1 to three random stats)")
                             for i in range(0,2):
-                                one_time_random = random.choice(list_for_gaining_stats)
+                                one_time_random = random.choice(LIST_FOR_GAINING_STATS)
                                 print("you lose 1:", classes[class_area]["stats"][one_time_random])
                                 classes[class_area]["stats"][one_time_random] -= 1
 
@@ -469,13 +465,13 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                 print("required luck needed for YUMMY piece of goop: ",amount_stat_needed)
                 if amount_stat_needed <= classes[class_area]["stats"][11]:
                     while True:
-                        one_time_random = random.choice(list_for_gaining_stats)
+                        one_time_random = random.choice(LIST_FOR_GAINING_STATS)
                         if not one_time_random == 7: #if stat is not vigor
                             print("you gained one: ", classes[class_area]["stats"][one_time_random])
                             classes[class_area]["stats"][one_time_random]
                             break #ends loop
                         else:
-                            one_time_random = random.choice(list_for_gaining_stats) #this is here so nothing happens and it trys to find a stat other than vigor
+                            one_time_random = random.choice(LIST_FOR_GAINING_STATS) #this is here so nothing happens and it trys to find a stat other than vigor
                 else:
                     print("you consumed a GROSS piece of goop... you lose 1 intelligence")
                     classes[class_area]["stats"][5] -= 1
@@ -641,7 +637,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                         inventory.append("soda")
                         print("but due to your patheticness 3 of your stats are drained by 1")
                         for i in range(0,3):
-                            chosen_stat = random.choice(list_for_gaining_stats)
+                            chosen_stat = random.choice(LIST_FOR_GAINING_STATS)
                             classes[class_area]["stats"][chosen_stat] -= 1
                     elif 100>= amount_stat_needed >= 31:
                         print("steve huffman laughs at your pity... but you are able to strike him while he is down... (he has been permanantly weakened but you lose 4 vigor) ")
@@ -718,8 +714,8 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                     else:
                         print("his strength consumes you... (-1 to all stats, he is now permanently harder)")
                         steve_huffman_difficulty +=2
-                        for i in range(0, len(list_for_gaining_stats)):
-                            classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+                        for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                            classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] -= 1
 
                 elif chosen_area == 5: #-------------------------------------using item path on steve huffman fight------
                     print(inventory)
@@ -777,7 +773,7 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
                             print("you turn a lock on the back of steve huffman... a two random items drop from his back")
                             for i in range(0,1):
                                 time.sleep(2)
-                                one_time_random = random.choice(every_item_in_game)
+                                one_time_random = random.choice(EVERY_ITEM_IN_GAME)
                                 inventory.append(one_time_random)
                                 print("you got a:",one_time_random)
                                 print("")
@@ -792,7 +788,6 @@ def skill_check_encounter(encounter_decider,difficulty):#parameters encounter de
 
         else:
             success = "true ending"
-            print("you have gotten ending 6: true ending")
 
         if success == "meaninglessness ending":
             print("you have gotten ending 1: meaninglessness ending")
@@ -866,29 +861,71 @@ def inventory_combine(inventory): #used for combining two items into a stat boos
         if first_item in inventory: #if valid input checks for second item
             second_item = input("what is the second item you want to combine? (or type same item again to use it)")
             if second_item == first_item:#--------------------using the item------------------------------
-                if first_item and second_item == "soda":
+                if first_item and second_item == "soda": #----------using just soda------------
                     print("you gain 3 vigor...")
                     inventory.remove("soda")
                     classes[class_area]["stats"][7] += 3
-                elif  first_item and second_item == "katana":
+                elif  first_item and second_item == "katana":#----------using just katana------------
                     print("you sharpen your skills... (+2 strength)")
                     classes[class_area]["stats"][1] += 2
                     inventory.remove("katana")
-                elif  first_item and second_item == "grenade":
+                elif  first_item and second_item == "grenade":#----------using just grenade------------
                     print("you blow yourself up... (-16 vigor)")
                     classes[class_area]["stats"][7] -= 16
                     inventory.remove("grenade")
-                elif  first_item and second_item == "body pillow":
+                elif  first_item and second_item == "body pillow":#----------using just body pillow------------
                     print("you relish the body pillow... (+1 to all stats)")
-                    for i in range(0, len(list_for_gaining_stats)):
-                        classes[class_area]["stats"][list_for_gaining_stats[i]] += 1
+                    for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                        classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] += 1
                     inventory.remove("body pillow")
-                elif first_item and second_item == "disgusting pillow":
+                elif first_item and second_item == "disgusting pillow": #----------using just disgutsing pillow------------
                     print("you become absolutely disgusting... ( +3 intelligence,  -2 streetcred")
                     inventory.remove("disgusting pillow")
                     classes[class_area]["stats"][5] += 3
                     classes[class_area]["stats"][13] -= 2
-                elif first_item and second_item == "special key":
+                elif first_item and second_item == "special key":#----------using just special key------------
+                    print("you are granted a random item for usage...")
+                    one_time_random = random.choice(EVERY_ITEM_IN_GAME)
+                    print("you get a:",one_time_random)
+                    inventory.append(one_time_random)
+                    inventory.remove("special key")
+                elif first_item and second_item == "cheese":#----------using just cheese------------
+                    print("you are granted a random stat up...")
+                    one_time_random = random.choice(LIST_FOR_GAINING_STATS)
+                    print("you get +2 to:",classes[class_area]["stats"][one_time_random-1])
+                    classes[class_area]["stats"][one_time_random] += 2
+                    inventory.remove("cheese")
+                elif first_item and second_item == "hat of shame":#----------using just hat of shame------------
+                    print("you digust yourself and feel miserable after usage... (-1 to all stats)")
+                    for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                        classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] -= 1
+                    inventory.remove("hat of shame")
+                elif first_item and second_item == "nuke":#----------using just nuke------------
+                    print("you successfully blow yourself up and the entire building, you die along with everybody else...")
+                    classes[class_area]["stats"][7] = -999
+                elif first_item and second_item == "hat of triumph":#----------using just hat of triumph------------
+                    print("you are blessed with excellent stats. (+4 to every stat)")
+                    for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                        classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] += 4
+                    inventory.remove("hat of triumph")
+                elif first_item and second_item == "holy cheese":#----------using just holy cheese------------
+                    print("you eat the cheese and feel rejuivanted (+1 to every stat)")
+                    for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                        classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] +=1
+                elif first_item and second_item == "goop":  # -----------------------------------USING JUST goop--------------------------------
+                    print("you combined gunk to create a tasty snack, ( +5 vigor)")
+                    classes[class_area]["stats"][7] += 5
+                    inventory.remove("goop")
+                elif first_item and second_item == "random dead guy in horse costume":
+                    print("you begrudgingly consume the dead guy.")
+                    print("it tastes like rainbows...   (+5 to every stat)")
+                    for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                        classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] += 5
+
+
+                else:
+                    print("???") #-----I don't think this is possible to happen, but it is here just in case.
+
 
 
             else:#--------------------------------------------actually crafting----------------------------------
@@ -902,25 +939,19 @@ def inventory_combine(inventory): #used for combining two items into a stat boos
                         classes[class_area]["stats"][9] += 1
 
                     elif first_item  == "katana" and second_item == "grenade" or first_item == "grenade" and second_item == "katana": # -------grenade katana recipe---------
-                        print("the grenade blows up and you die instantly... game over.")
-                        quit()
+                        print("the grenade blows up and you are severly hurt... (-28 vigor))")
+                        classes[class_area]["stats"][7] -= 28
                     elif first_item  == "holy cheese" and second_item == "body pillow" or first_item == "body pillow" and second_item == "holy cheese": #---body pillow holy cheese recipe----
                         print("two heavenly objects have been combined... the gods bless you... (+3 to every stat)")
                         inventory.remove("body pillow")
                         inventory.remove("holy cheese")
                         inventory.append("disgusting pillow")
-                        for i in range(0,len(list_for_gaining_stats)):
-                            classes[class_area]["stats"][list_for_gaining_stats[i]] += 3
+                        for i in range(0,len(LIST_FOR_GAINING_STATS)):
+                            classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] += 3
                     elif first_item  == "holy cheese" and second_item == "katana" or first_item == "katana" and second_item == "holy cheese": #----holy cheese and body pillow recipe--------
                         print("you have done a holy act... for your strength will now be handsomely rewarded... (+7)")
                         inventory.remove("holy cheese")
                         classes[class_area]["stats"][1] += 7
-                    elif first_item == "goop" and second_item == "goop": #-----------------------------------goop recipe--------------------------------
-                        if inventory.count("goop") >=2:
-                            print("you combined gunk to create a tasty snack, ( +5 vigor)")
-                            classes[class_area]["stats"][7] += 5
-                        else:
-                            print("not enough goop")
 
                     else:
                         print("you can't combine those two items")
@@ -961,13 +992,13 @@ while True:
                 time.sleep(2)
                 print("you lose the game if any stat (including cash) is reduced to zero or lower")
             elif player_option == 4: #ending viewer option in main menu
-                for i in range(0,len(endings)): #prints amounts of endings
-                    endings_check = endings[i] #sets other variable to check for variable in another list by setting the value to the according ending in the list
+                for i in range(0,len(ENDINGS)): #prints amounts of endings
+                    endings_check = ENDINGS[i] #sets other variable to check for variable in another list by setting the value to the according ending in the list
                     if endings_check in completed_endings: #adds status after ending to improve player readability. checks if endings are in list of completed ones
                         status = "completed" #if have gotten ending then it will show as completed
                     else:
                         status = "incomplete" #if haven't gotten ending then will show incomplete
-                    print("ending", i + 1, "=", endings[i]) #prints according messages displaying the ending name and the status later
+                    print("ending", i + 1, "=", ENDINGS[i]) #prints according messages displaying the ending name and the status later
                     print("status: ", status)
                     print("")
                 try:
@@ -985,7 +1016,8 @@ while True:
         except ValueError:
             print("not a valid input")
 
-
+    print("to learn about the terrors of american culture you must see how they treat their workers and citizens.")
+    print("you will roleplay one of these spiteful and foul americans getting revenge for something that is greatly inconsequential:")
     print("Some guy that insulted your reddit account turned out to be the ceo of reddit... Steve Huffman ")
     print("your goal is to break into his large epic skyscraper and humiliate him in the most gratifying way you can imagine.")
     print("but first, you must pick your angry redditor")
@@ -1019,11 +1051,13 @@ while True:
             print("invalid input")
 
 
-    phase_one = True
+    phase_four = True
+    #inventory.clear()
+    for i in range(0, len(LIST_FOR_GAINING_STATS)):
+        classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] += 999
     while True:
         while phase_one == True: #start here but player could go to many different points of the game, all phases start out false and certain ones will be unlocked based on specific scenario
             chosen_area = input("you stand at the front gates of the large corporate building, you notice a [v]ending machine,the [f]ront gates, and a [m]ouldy piece of cheese on the ground. ")
-
             quit_or_inventory(chosen_area)
 
             if chosen_area == "v":
@@ -1054,9 +1088,8 @@ while True:
                                     classes[class_area]["stats"][15] += one_time_random
                                     break
                                 elif chosen_area == "r":
-                                    one_time_random = random.choice(list_for_gaining_stats)
-                                    print(one_time_random)
-                                    print("you increased your: ",classes[class_area]["stats"][one_time_random-1],"by one")
+                                    one_time_random = random.choice(LIST_FOR_GAINING_STATS)
+                                    print("you increased your:",classes[class_area]["stats"][one_time_random-1],"by one")
                                     classes[class_area]["stats"][one_time_random] += 1
                                     break
                                 else:
@@ -1074,25 +1107,27 @@ while True:
                                 phase_two = True
                             else:
                                 print("your beating made national headlines, you are coaxed in shame and leave, -1 to all stats")
-                                for i in range(0,len(list_for_gaining_stats)):
-                                    classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+                                for i in range(0,len(LIST_FOR_GAINING_STATS)):
+                                    classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] -= 1
                                 encounter_decider = 0
                                 skill_check_encounter(encounter_decider,difficulty) #checks if a stat went below 0
                         phase_one = False
                         break # breaks phase one loop :D :D :D :D :D :D
                     elif chosen_area == "r":
                         print("you decide to try and brute force your way through the redditor...")
-                        encounter_decider = 3
+                        encounter_decider = 2
                         skill_check_encounter(encounter_decider,difficulty)
                         if success == "y":
                             print("you progress through to the next area... your stats have been all increased by one")
-                            for i in range(0, len(list_for_gaining_stats)):
-                                classes[class_area]["stats"][list_for_gaining_stats[i]] += 1
+                            for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                                classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] += 1
                             phase_one = False
                             phase_two = True
                         else:
                             print("your failure makes great headlines as this is an embarrassing loss (-3 street cred)")
                             classes[class_area]["stats"][13] -= 3
+
+                        break
 
 
             elif chosen_area == "m": # mouldy cheese path for phase 1
@@ -1157,7 +1192,7 @@ while True:
                         skill_check_encounter(encounter_decider,difficulty)
                         print(success)
                         if success == "y":
-                            print("you have entered the building, the outside now does not exist")
+                            print("you have entered the building")
                         else:
                             print("you failed confronting the redditor, you still enter the right side of the building but now wear the hat of shame")
                             inventory.append("hat of shame")
@@ -1170,11 +1205,15 @@ while True:
                         time.sleep(2)
 
         while phase_two == True:
-            chosen_area = input("you see a [d]oor with a special lock, a fat looking [c]ashier, and a [f]resh looking piece of cheese")
+            chosen_area = input("you see a [d]oor with a special lock, a fat looking [c]ashier, and a [f]resh looking piece of cheese [r]eturn")
             quit_or_inventory(chosen_area)
-            if chosen_area == "d": #door path
+            if chosen_area == "r":
+                phase_two = False
+                phase_one = True
+            elif chosen_area == "d": #door path
                 if door_open == False:
                     chosen_area = input("you approach the locked door, you can try to [o]pen door, [d]etonate door or [l]eave")
+                    quit_or_inventory(chosen_area)
                     if chosen_area == "o":
                         if "special key" in inventory:
                             inventory.remove("special key")
@@ -1191,8 +1230,8 @@ while True:
                             print("you throw a grenade at the door, blowing it up as well as yourself, -1 to every stat")
                             time.sleep(1)
                             print("you have also alerted a high profile guard...")
-                            for i in range(0, len(list_for_gaining_stats)):
-                                classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+                            for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                                classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] -= 1
                             encounter_decider = 2
                             difficulty = 5
                             skill_check_encounter(encounter_decider,difficulty)
@@ -1223,7 +1262,7 @@ while True:
 
             elif chosen_area == "c":
                 if cashier == "alive":
-                    chosen_area = input("WELCOME TO MY CHUNKO STORE!!!! I HAVE [a]NIME PILLOWS FOR $9, [g]RENADES FOR $11 AND A [s]UPER DUPER SPECIAL KEY FOR $30!!! or [c]HALLENGE ME FOR MY STORE!!!")
+                    chosen_area = input("WELCOME TO MY STORE!!!! I HAVE [a]NIME PILLOWS FOR $9, [g]RENADES FOR $11 AND A [s]UPER DUPER SPECIAL KEY FOR $30!!! or [c]HALLENGE ME FOR MY STORE!!!")
                     quit_or_inventory(chosen_area)
                     if chosen_area == "a":
                         if "body pillow" in cashier_store:
@@ -1286,17 +1325,18 @@ while True:
                     difficulty = 5
                     skill_check_encounter(encounter_decider, difficulty)
                     if success == "y":
+                        classes[class_area]["stats"][15] += 3
+                        inventory.append("special key")
                         while True:
                             while phase_two_cheese == "virgin":
                                 chosen_area = input("you defeat the agent and steal a special key hidden in his underpants and 3 dollars :$) do you want to [e]at cheese or [t]ake it?")
-                                classes[class_area]["stats"][15] += 3
-                                inventory.append("special key")
                                 quit_or_inventory(chosen_area)
                                 if chosen_area == "e":
-                                    print("you gain +1 to every stat and feel refreshed")
+                                    print("you gain +1 to every stat and feel refreshed (+8 vigor)")
                                     phase_two_cheese = "eaten"
-                                    for i in range((0,7),2):
-                                        classes[class_area]["stats"][list_for_gaining_stats[i]] += 1
+                                    classes[class_area]["stats"][7] += 8
+                                    for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                                        classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] += 1
 
                                 elif chosen_area == "t":
                                     print("you gained: holy cheese")
@@ -1306,19 +1346,11 @@ while True:
                                 else:
                                     print("you have to do something with the cheese...")
 
-                            chosen_area = input("do you want to the [r]eturn to the previous area or [c]ontinue down the hall?")
-                            quit_or_inventory(chosen_area)
-                            if chosen_area == "r":
-                                print("you went back...")
-                                break
-                            elif chosen_area == "c":
-                                print("you continue onwards...")
-                                phase_two = False
-                                phase_four = True
-                                break
 
-                            else:
-                                print("invalid input")
+                            print("you continue onwards into the building...")
+                            phase_two = False
+                            phase_four = True
+                            break
 
                     else:
                         print("your humiliating defeat distracts the gilded agent... you are able to continue past him further into the building")
@@ -1378,21 +1410,24 @@ while True:
                                         one_time_random = random.randint(30,44)
                                         print("the cash bag contained:",one_time_random,"dollars (you get that money now :D)")
                                         classes[class_area]["stats"][15] += one_time_random
+                                        phase_three_reward = False
+                                        break
 
                                     elif chosen_area == "h":
-                                        print("you feel heroic and powerful... (+3 to every stat) (you also get a hat of triumph)")
-                                        for i in range(0, len(list_for_gaining_stats)):
-                                            classes[class_area]["stats"][list_for_gaining_stats[i]] += 3
+                                        print("you feel heroic and powerful...(you get a hat of triumph)")
                                         inventory.append("hat of triumph")
+                                        phase_three_reward = False
+                                        break
 
                                     elif chosen_area == "c":
                                         print("you get a company nuke...")
-                                        inventory.append("company nuke")
+                                        inventory.append("nuke")
+                                        phase_three_reward = False
+                                        break
                                     else:
-                                        print("mehmehmehmehmemh")
+                                        print("you have to choose something...")
 
-                                    phase_three_reward = False
-                                    break
+
                             else:
                                 if "random dead guy in horse costume" in inventory:
                                     print("there was no mystical pony... but you see a remnant of its goop... (you get goop and a....... wait what??????)")
@@ -1406,9 +1441,9 @@ while True:
                             phase_four = True
                         else:
                             print("you are humiliated and tired... but some guy kicks you in the butt which goes through time and space (you are teleported to a random location)")
-                            one_time_random = random.randint(0,len(list_of_phases))
+                            one_time_random = random.randint(0,len(LIST_OF_PHASES))
                             phase_three_reward = False
-                            list_of_phases[one_time_random] = True
+                            LIST_OF_PHASES[one_time_random] = True
 
                     else:
                         print("you are ashamed... (-1 street cred")
@@ -1439,7 +1474,7 @@ while True:
                     elif "body pillow" in inventory:
                         while True:
                             chosen_area = input("that is a pretty kawaii body pillow bro... I'll give you like $15 bucks for it... [y]es, [n]o")#more options for this section
-
+                            quit_or_inventory(chosen_area)
                             if chosen_area == "y":
                                 print("COOL THANKS BROOOOO THIS CHARACTER IS SO CUTEEEEEEEE!!!!!!")  #appropriate changes are made
                                 classes[class_area]["stats"][15] += 15
@@ -1448,15 +1483,15 @@ while True:
                                 phase_four = True
                                 break
                             elif chosen_area == "n":
-                                print("heh heh heh... you dare deny me of my WAIFUS!!!!")
+                                print("heh heh heh... you dare deny me of my body pillow!!!")
                                 encounter_decider = 4
                                 difficulty = 8
                                 skill_check_encounter(encounter_decider, difficulty)
                                 if success == "y":
                                     print("alright bro...... ARGHGHHH YOU KEEP THE PILLOW HERE'S ALL MY MONEY IM SORRY (+30 dollars + 1 to all stats)")
                                     classes[class_area]["stats"][15] += 30
-                                    for i in range(0, len(list_for_gaining_stats)):
-                                        classes[class_area]["stats"][list_for_gaining_stats[i]] += 1
+                                    for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                                        classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] += 1
                                     phase_three = False
                                     phase_four = True
                                     break
@@ -1465,11 +1500,13 @@ while True:
                                     phase_three = False
                                     phase_one = True
                                     break
+                            else:
+                                print("tell me something dude...")
 
                     else: #if player has none of the above three items in their inventory
                         print("all the redditors laugh at you as you walk by because you seem so goddamn boring... -1 to all stats and you lose all your street cred...")
-                        for i in range(0, len(list_for_gaining_stats)):
-                            classes[class_area]["stats"][list_for_gaining_stats[i]] -= 1
+                        for i in range(0, len(LIST_FOR_GAINING_STATS)):
+                            classes[class_area]["stats"][LIST_FOR_GAINING_STATS[i]] -= 1
                         classes[class_area]["stats"][15] = 1
                         phase_four = False
                         phase_five = True
@@ -1503,9 +1540,9 @@ while True:
 
 
 
-        while phase_four == True:
+        while phase_four == True:#-------------------------------PHASE FOUR------------------------
             try:
-                chosen_area = input("As you reach the final stages of the building, you come across a [v]ending machine, and a large [b]oss stands in the way, [r]eturn")
+                chosen_area = input("phase four: As you reach the final stages of the building, you come across a [v]ending machine, and a large [b]oss stands in the way, [r]eturn")
                 quit_or_inventory(chosen_area)
                 if chosen_area == "v":
                     encounter_decider = 3
@@ -1529,8 +1566,13 @@ while True:
                         phase_four = False
                         phase_five = True
                 elif chosen_area == "r":
-                    phase_one = True
+                    one_time_random = random.randint(1,2)
+                    if one_time_random == 1:
+                        phase_two = True
+                    else:
+                        phase_three = True
                     phase_four = False
+
                 else:
                     print("not a valid input")
             except ValueError:
@@ -1558,7 +1600,7 @@ while True:
                 phase_five = False
                 phase_one = True
             elif chosen_area == "e":
-                chosen_area = input("hello there... welcome to my humble abode... I sell [h]oly cheese for $20, [d]ome hat of triumph for $25, and [n]uke for $99, [r]eturn")
+                chosen_area = input("hello there... welcome to my humble abode... I sell [h]oly cheese for $20, [d]ome hat of triumph for $25, and [n]uke for $50, [r]eturn")
                 quit_or_inventory(chosen_area)
                 if chosen_area == "h":
                     if "holy cheese" in endgame_shop:
@@ -1583,7 +1625,7 @@ while True:
                 elif chosen_area == "n":
                     if "nuke" in endgame_shop:
                         endgame_shop.remove(chosen_area)
-                        classes[class_area]["stats"][15] -= 99
+                        classes[class_area]["stats"][15] -= 50
                         print("...")
                         inventory.append("nuke")
                         encounter_decider = 0
